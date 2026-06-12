@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal da Supervisão - Controle Orçamentário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --senac-blue: #004587;
+            --senac-orange: #f37021;
+            --ink: #172033;
+            --muted: #64748b;
+            --line: #dbe3ee;
+            --panel: #ffffff;
+            --page: #f6f8fb;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--page);
+            color: var(--ink);
+        }
+
+        .senac-blue { background-color: var(--senac-blue); }
+        .senac-orange { background-color: var(--senac-orange); }
+        .senac-blue-text { color: var(--senac-blue); }
+        .senac-orange-text { color: var(--senac-orange); }
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        .tab-btn {
+            border-bottom: 3px solid transparent;
+            color: #526176;
+            transition: color .18s ease, border-color .18s ease;
+        }
+        .tab-btn.active {
+            border-color: var(--senac-orange);
+            color: var(--senac-blue);
+            font-weight: 800;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .field-label {
+            display: block;
+            font-size: 11px;
+            line-height: 1.2;
+            font-weight: 800;
+            color: #56657a;
+            letter-spacing: .02em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .input {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: #fff;
+            padding: 9px 10px;
+            font-size: 14px;
+            color: #1f2937;
+            outline: none;
+        }
+        .input:focus {
+            border-color: var(--senac-orange);
+            box-shadow: 0 0 0 3px rgba(243, 112, 33, .15);
+        }
+        .input-sm {
+            min-width: 72px;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            padding: 6px 8px;
+            font-size: 13px;
+            outline: none;
+        }
+        .input-sm:focus {
+            border-color: var(--senac-orange);
+            box-shadow: 0 0 0 2px rgba(243, 112, 33, .12);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 10px 14px;
+            transition: transform .12s ease, background .12s ease, border-color .12s ease;
+        }
+        .btn:active { transform: translateY(1px); }
+        .btn-primary { background: var(--senac-blue); color: #fff; }
+        .btn-primary:hover { background: #003868; }
+        .btn-orange { background: var(--senac-orange); color: #fff; }
+        .btn-orange:hover { background: #d95f17; }
+        .btn-outline {
+            background: #fff;
+            color: var(--senac-blue);
+            border: 1px solid #b8c6d8;
+        }
+        .btn-outline:hover { border-color: var(--senac-blue); background: #f8fbff; }
+        .btn-danger {
+            background: #fff1f2;
+            color: #be123c;
+            border: 1px solid #fecdd3;
+        }
+        .btn-danger:hover { background: #ffe4e6; }
+
+        .kpi-card {
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 118px;
+        }
+        .kpi-card .icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .kpi-value {
+            font-size: clamp(22px, 3vw, 30px);
+            line-height: 1.05;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+        .kpi-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: #64748b;
+            font-weight: 800;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+        }
+        table { border-collapse: separate; border-spacing: 0; width: 100%; }
+        th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            font-weight: 900;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 13px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        tr:hover td { background: #f8fafc; }
+        .row-alert td { background: #fff1f2; }
+        .row-alert:hover td { background: #ffe4e6; }
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 4px 9px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .pill-blue { background: #e6f1fb; color: #004587; }
+        .pill-orange { background: #fff0e6; color: #b45309; }
+        .pill-green { background: #dcfce7; color: #166534; }
+        .pill-red { background: #fee2e2; color: #991b1b; }
+
+        .chart-box { height: 320px; position: relative; }
+        .note {
+            border-left: 4px solid var(--senac-orange);
+            background: #fff7ed;
+            color: #7c2d12;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 13px;
+        }
+        .status-text {
+            min-height: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+        }
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #bac7d5; border-radius: 999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+    <nav class="senac-blue text-white px-4 py-4 shadow-md">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="bg-white senac-blue-text w-11 h-11 rounded-md flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div class="min-w-0">
+                    <h1 class="text-xl font-black tracking-wide truncate">Portal da Supervisão</h1>
+                    <p class="text-xs text-blue-100 font-semibold truncate">Controle orçamentário de visitas e deslocamentos</p>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center gap-3">
+                <div class="text-right">
+                    <p class="text-sm font-bold">Senac Portão - PR</p>
+                    <p class="text-xs text-blue-100">Orçamento, retificação e simulação</p>
+                </div>
+                <div class="h-10 w-10 bg-white senac-blue-text rounded-full flex items-center justify-center font-black border-2 border-orange-400">
+                    OS
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <section class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+            <div class="panel p-5 xl:col-span-2">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-file-excel senac-blue-text"></i>
+                            Fonte de dados
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Importe Excel ou CSV. A leitura identifica turma, status, modalidade e quantidade de alunos quando essas colunas existirem.
+                        </p>
+                    </div>
+                    <span class="pill pill-blue w-fit">
+                        <i class="fa-solid fa-database"></i>
+                        Base média: 870 + 500 alunos
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
+                    <div class="lg:col-span-5">
+                        <label class="field-label" for="file-input">Upload Excel/CSV</label>
+                        <input id="file-input" type="file" accept=".xlsx,.xls,.csv" multiple class="input file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-800">
+                    </div>
+                    <div class="lg:col-span-3">
+                        <label class="field-label" for="fallback-modality">Modalidade se a planilha não informar</label>
+                        <select id="fallback-modality" class="input">
+                            <option value="auto">Auto</option>
+                            <option value="Qualificação">Qualificação</option>
+                            <option value="Técnica">Técnica</option>
+                        </select>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <button id="import-files" class="btn btn-primary w-full">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            Importar
+                        </button>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <button id="reset-default" class="btn btn-outline w-full">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Base média
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end mt-4">
+                    <div class="lg:col-span-9">
+                        <label class="field-label" for="remote-url">Link público do Excel/CSV online</label>
+                        <input id="remote-url" class="input" placeholder="Cole uma URL pública terminando em .xlsx, .xls ou .csv">
+                    </div>
+                    <div class="lg:col-span-3">
+                        <button id="load-url" class="btn btn-outline w-full">
+                            <i class="fa-solid fa-link"></i>
+                            Ler URL
+                        </button>
+                    </div>
+                </div>
+                <p id="import-status" class="status-text mt-3"></p>
+            </div>
+
+            <div class="panel p-5">
+                <h2 class="text-lg font-black text-slate-800 flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-sliders senac-orange-text"></i>
+                    Parâmetros editáveis
+                </h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="field-label" for="cfg-valor-hora">Valor hora (R$)</label>
+                        <input id="cfg-valor-hora" type="number" step="0.01" min="0" class="input" value="3.75">
+                    </div>
+                    <div>
+                        <label class="field-label" for="cfg-horas-visita">Horas por visita</label>
+                        <input id="cfg-horas-visita" type="number" step="0.1" min="0" class="input" value="0.5">
+                    </div>
+                    <div>
+                        <label class="field-label" for="cfg-teto">Teto turma (h)</label>
+                        <input id="cfg-teto" type="number" step="1" min="1" class="input" value="100">
+                    </div>
+                    <div>
+                        <label class="field-label" for="cfg-qual-visitas">Visitas mês qual.</label>
+                        <input id="cfg-qual-visitas" type="number" step="1" min="0" max="3" class="input" value="1">
+                    </div>
+                    <div>
+                        <label class="field-label" for="cfg-tec-visitas">Visitas mês técnica</label>
+                        <input id="cfg-tec-visitas" type="number" step="1" min="0" max="6" class="input" value="1">
+                    </div>
+                    <div class="flex items-end">
+                        <button id="apply-config" class="btn btn-orange w-full">
+                            <i class="fa-solid fa-calculator"></i>
+                            Recalcular
+                        </button>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 mt-3">
+                    O filtro mensal calcula o custo do mês sem alterar a projeção total do contrato.
+                </p>
+            </div>
+        </section>
+
+        <section class="flex gap-7 overflow-x-auto border-b border-slate-200 px-1">
+            <button class="tab-btn active py-3 text-base shrink-0" data-tab="dashboard">
+                <i class="fa-solid fa-chart-line mr-2"></i>Painel
+            </button>
+            <button class="tab-btn py-3 text-base shrink-0" data-tab="base">
+                <i class="fa-solid fa-table mr-2"></i>Base editável
+            </button>
+            <button class="tab-btn py-3 text-base shrink-0" data-tab="simulator">
+                <i class="fa-solid fa-flask mr-2"></i>Simulador
+            </button>
+            <button class="tab-btn py-3 text-base shrink-0" data-tab="travel">
+                <i class="fa-solid fa-route mr-2"></i>Deslocamento
+            </button>
+        </section>
+
+        <section id="tab-dashboard" class="tab-panel active space-y-6">
+            <div class="panel p-5">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                    <div>
+                        <label class="field-label" for="filter-modality">Filtrar modalidade</label>
+                        <select id="filter-modality" class="input">
+                            <option value="all">Todas</option>
+                            <option value="Qualificação">Qualificação</option>
+                            <option value="Técnica">Técnica</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="field-label" for="filter-search">Buscar turma</label>
+                        <input id="filter-search" class="input" placeholder="Digite o código/nome da turma">
+                    </div>
+                    <div>
+                        <label class="field-label" for="filter-risk">Exibir</label>
+                        <select id="filter-risk" class="input">
+                            <option value="all">Todas as turmas</option>
+                            <option value="over">Somente acima do teto</option>
+                            <option value="ok">Somente dentro do teto</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div class="kpi-card">
+                    <span class="icon bg-blue-50 senac-blue-text"><i class="fa-solid fa-users"></i></span>
+                    <p class="kpi-label mt-3">Alunos filtrados</p>
+                    <p id="kpi-alunos" class="kpi-value">0</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-indigo-50 text-indigo-700"><i class="fa-solid fa-person-walking-arrow-right"></i></span>
+                    <p class="kpi-label mt-3">Visitas totais previstas</p>
+                    <p id="kpi-visitas-total" class="kpi-value">0</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-slate-100 text-slate-700"><i class="fa-solid fa-clock"></i></span>
+                    <p class="kpi-label mt-3">Horas totais previstas</p>
+                    <p id="kpi-horas-total" class="kpi-value">0h</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-orange-50 senac-orange-text"><i class="fa-solid fa-sack-dollar"></i></span>
+                    <p class="kpi-label mt-3">Custo total das visitas</p>
+                    <p id="kpi-custo-total" class="kpi-value">R$ 0,00</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-cyan-50 text-cyan-700"><i class="fa-solid fa-calendar-days"></i></span>
+                    <p class="kpi-label mt-3">Visitas no mês</p>
+                    <p id="kpi-visitas-mes" class="kpi-value">0</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-emerald-50 text-emerald-700"><i class="fa-solid fa-money-check-dollar"></i></span>
+                    <p class="kpi-label mt-3">Custo das visitas no mês</p>
+                    <p id="kpi-custo-mes" class="kpi-value">R$ 0,00</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-amber-50 text-amber-700"><i class="fa-solid fa-gas-pump"></i></span>
+                    <p class="kpi-label mt-3">Deslocamento lançado</p>
+                    <p id="kpi-deslocamento" class="kpi-value">R$ 0,00</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-red-50 text-red-700"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                    <p class="kpi-label mt-3">Turmas acima do teto</p>
+                    <p id="kpi-estouradas" class="kpi-value">0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+                <div class="panel p-5 xl:col-span-2">
+                    <h2 class="text-lg font-black mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-column senac-blue-text"></i>
+                        Horas previstas por turma
+                    </h2>
+                    <div class="chart-box">
+                        <canvas id="chart-hours"></canvas>
+                    </div>
+                </div>
+                <div class="panel p-5">
+                    <h2 class="text-lg font-black mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie senac-orange-text"></i>
+                        Custo do mês
+                    </h2>
+                    <div class="chart-box">
+                        <canvas id="chart-costs"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel p-5">
+                <h2 class="text-lg font-black mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check senac-blue-text"></i>
+                    Auditoria rápida por turma
+                </h2>
+                <div class="table-wrap custom-scrollbar max-h-[520px]">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Turma</th>
+                                <th>Modalidade</th>
+                                <th class="text-right">Alunos</th>
+                                <th class="text-right">Visitas totais</th>
+                                <th class="text-right">Horas totais</th>
+                                <th class="text-right">Saldo teto</th>
+                                <th class="text-right">Custo total</th>
+                                <th class="text-right">Custo mês</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-base" class="tab-panel space-y-5">
+            <div class="panel p-5">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                    <div>
+                        <h2 class="text-lg font-black flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square senac-blue-text"></i>
+                            Base editável
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Edite turma, modalidade, alunos e visitas. Os dashboards recalculam automaticamente.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button id="add-row" class="btn btn-outline">
+                            <i class="fa-solid fa-plus"></i>
+                            Incluir turma
+                        </button>
+                        <button id="export-data" class="btn btn-orange">
+                            <i class="fa-solid fa-file-export"></i>
+                            Exportar CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel p-5">
+                <div class="table-wrap custom-scrollbar max-h-[660px]">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Turma</th>
+                                <th>Modalidade</th>
+                                <th class="text-right">Alunos</th>
+                                <th class="text-right">Visitas por aluno</th>
+                                <th class="text-right">Visitas mês</th>
+                                <th class="text-right">Horas totais</th>
+                                <th class="text-right">Custo total</th>
+                                <th class="text-right">Custo mês</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="editable-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-simulator" class="tab-panel space-y-5">
+            <div class="panel p-5">
+                <h2 class="text-lg font-black flex items-center gap-2">
+                    <i class="fa-solid fa-flask senac-blue-text"></i>
+                    Simulador de cenário
+                </h2>
+                <p class="text-sm text-slate-500 mt-1">
+                    Simule volumes de alunos e a quantidade de turmas necessária para ficar dentro do teto de horas.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-3 mt-5 items-end">
+                    <div>
+                        <label class="field-label" for="sim-qual-alunos">Alunos qualificação</label>
+                        <input id="sim-qual-alunos" type="number" min="0" step="1" class="input" value="870">
+                    </div>
+                    <div>
+                        <label class="field-label" for="sim-tec-alunos">Alunos técnica</label>
+                        <input id="sim-tec-alunos" type="number" min="0" step="1" class="input" value="500">
+                    </div>
+                    <div>
+                        <label class="field-label" for="sim-qual-turmas">Turmas qual.</label>
+                        <input id="sim-qual-turmas" type="number" min="1" step="1" class="input" value="14">
+                    </div>
+                    <div>
+                        <label class="field-label" for="sim-tec-turmas">Turmas técnica</label>
+                        <input id="sim-tec-turmas" type="number" min="1" step="1" class="input" value="16">
+                    </div>
+                    <div>
+                        <button id="auto-turmas" class="btn btn-outline w-full">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            Sugerir
+                        </button>
+                    </div>
+                    <div>
+                        <button id="run-simulation" class="btn btn-primary w-full">
+                            <i class="fa-solid fa-play"></i>
+                            Simular
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button id="apply-simulation" class="btn btn-orange">
+                        <i class="fa-solid fa-check"></i>
+                        Aplicar simulação à base
+                    </button>
+                    <span id="simulation-status" class="status-text"></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="kpi-card">
+                    <span class="icon bg-blue-50 senac-blue-text"><i class="fa-solid fa-users"></i></span>
+                    <p class="kpi-label mt-3">Alunos simulados</p>
+                    <p id="sim-kpi-alunos" class="kpi-value">0</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-slate-100 text-slate-700"><i class="fa-solid fa-clock"></i></span>
+                    <p class="kpi-label mt-3">Horas simuladas</p>
+                    <p id="sim-kpi-horas" class="kpi-value">0h</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-orange-50 senac-orange-text"><i class="fa-solid fa-sack-dollar"></i></span>
+                    <p class="kpi-label mt-3">Custo simulado</p>
+                    <p id="sim-kpi-custo" class="kpi-value">R$ 0,00</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-red-50 text-red-700"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                    <p class="kpi-label mt-3">Turmas acima do teto</p>
+                    <p id="sim-kpi-alerta" class="kpi-value">0</p>
+                </div>
+            </div>
+
+            <div class="panel p-5">
+                <div class="table-wrap custom-scrollbar max-h-[560px]">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Turma</th>
+                                <th>Modalidade</th>
+                                <th class="text-right">Alunos</th>
+                                <th class="text-right">Horas totais</th>
+                                <th class="text-right">Saldo teto</th>
+                                <th class="text-right">Custo total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="simulation-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-travel" class="tab-panel space-y-5">
+            <div class="panel p-5">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+                    <div class="xl:col-span-2">
+                        <h2 class="text-lg font-black flex items-center gap-2">
+                            <i class="fa-solid fa-route senac-blue-text"></i>
+                            Gastos de deslocamento
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Lance combustível, pedágio e outros valores. Para veículo próprio, o cálculo segue a regra do documento anexado.
+                        </p>
+                    </div>
+                    <div class="note">
+                        <strong>Veículo próprio:</strong>
+                        KM rodados ÷ consumo médio = litros. Depois: litros × 1,25 × valor do combustível.
+                        Rendimentos do PDF: gasolina 10 km/l; álcool e diesel 8 km/l.
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-3 mt-5 items-end">
+                    <div>
+                        <label class="field-label" for="travel-date">Data</label>
+                        <input id="travel-date" type="date" class="input">
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-class">Turma</label>
+                        <input id="travel-class" class="input" list="turmas-list" placeholder="Turma ou atividade">
+                        <datalist id="turmas-list"></datalist>
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-destination">Destino</label>
+                        <input id="travel-destination" class="input" placeholder="Cidade/local">
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-vehicle">Veículo</label>
+                        <select id="travel-vehicle" class="input">
+                            <option value="Senac">Carro do Senac</option>
+                            <option value="Próprio">Veículo próprio</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-fuel">Combustível</label>
+                        <select id="travel-fuel" class="input">
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Álcool">Álcool</option>
+                            <option value="Diesel">Diesel</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button id="add-travel" class="btn btn-primary w-full">
+                            <i class="fa-solid fa-plus"></i>
+                            Lançar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-3">
+                    <div>
+                        <label class="field-label" for="travel-km">KM rodados</label>
+                        <input id="travel-km" type="number" min="0" step="0.1" class="input" value="0">
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-fuel-price">Valor combustível</label>
+                        <input id="travel-fuel-price" type="number" min="0" step="0.01" class="input" value="6.00">
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-consumption">Consumo médio</label>
+                        <input id="travel-consumption" type="number" min="0" step="0.1" class="input" value="10">
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-toll">Pedágio</label>
+                        <input id="travel-toll" type="number" min="0" step="0.01" class="input" value="0">
+                    </div>
+                    <div>
+                        <label class="field-label" for="travel-other">Outros</label>
+                        <input id="travel-other" type="number" min="0" step="0.01" class="input" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div class="kpi-card">
+                    <span class="icon bg-cyan-50 text-cyan-700"><i class="fa-solid fa-road"></i></span>
+                    <p class="kpi-label mt-3">KM lançados</p>
+                    <p id="travel-kpi-km" class="kpi-value">0</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-amber-50 text-amber-700"><i class="fa-solid fa-gas-pump"></i></span>
+                    <p class="kpi-label mt-3">Combustível / reembolso</p>
+                    <p id="travel-kpi-fuel" class="kpi-value">R$ 0,00</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-slate-100 text-slate-700"><i class="fa-solid fa-receipt"></i></span>
+                    <p class="kpi-label mt-3">Pedágio e outros</p>
+                    <p id="travel-kpi-other" class="kpi-value">R$ 0,00</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="icon bg-orange-50 senac-orange-text"><i class="fa-solid fa-coins"></i></span>
+                    <p class="kpi-label mt-3">Total deslocamento</p>
+                    <p id="travel-kpi-total" class="kpi-value">R$ 0,00</p>
+                </div>
+            </div>
+
+            <div class="panel p-5">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                    <h2 class="text-lg font-black flex items-center gap-2">
+                        <i class="fa-solid fa-car-side senac-blue-text"></i>
+                        Lançamentos
+                    </h2>
+                    <button id="export-travel" class="btn btn-orange">
+                        <i class="fa-solid fa-file-export"></i>
+                        Exportar deslocamentos
+                    </button>
+                </div>
+                <div class="table-wrap custom-scrollbar max-h-[560px]">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Turma</th>
+                                <th>Destino</th>
+                                <th>Veículo</th>
+                                <th>Comb.</th>
+                                <th class="text-right">KM</th>
+                                <th class="text-right">Consumo</th>
+                                <th class="text-right">Valor/litro</th>
+                                <th class="text-right">Fator</th>
+                                <th class="text-right">Combustível</th>
+                                <th class="text-right">Pedágio</th>
+                                <th class="text-right">Outros</th>
+                                <th class="text-right">Total</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="travel-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const MODALIDADES = {
+            QUAL: 'Qualificação',
+            TEC: 'Técnica'
+        };
+
+        const DEFAULT_VISITS = {
+            [MODALIDADES.QUAL]: 3,
+            [MODALIDADES.TEC]: 6
+        };
+
+        const FUEL_CONSUMPTION = {
+            'Gasolina': 10,
+            'Álcool': 8,
+            'Diesel': 8
+        };
+
+        let config = {
+            valorHora: 3.75,
+            horasPorVisita: 0.5,
+            tetoHoras: 100,
+            visitasMesQual: 1,
+            visitasMesTec: 1
+        };
+
+        let turmas = [];
+        let simulatedRows = [];
+        let travelRows = [];
+        let chartHours = null;
+        let chartCosts = null;
+
+        const $ = (id) => document.getElementById(id);
+        const brl = (value) => (Number(value) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const num = (value) => Number(String(value ?? '').replace(',', '.')) || 0;
+        const intNum = (value) => Math.max(0, Math.round(num(value)));
+        const fmt = (value, digits = 1) => (Number(value) || 0).toLocaleString('pt-BR', {
+            minimumFractionDigits: digits,
+            maximumFractionDigits: digits
+        });
+        const uid = () => Math.random().toString(36).slice(2, 10);
+
+        function normalizeText(value) {
+            return String(value ?? '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .trim();
+        }
+
+        function todayISO() {
+            const now = new Date();
+            return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+        }
+
+        function defaultMonthVisits(modalidade) {
+            return modalidade === MODALIDADES.TEC ? config.visitasMesTec : config.visitasMesQual;
+        }
+
+        function buildBalancedRows(prefix, modalidade, totalAlunos, visitasTotal, turmaCount = null) {
+            const horasAluno = visitasTotal * config.horasPorVisita;
+            const maxAlunosPorTurma = Math.max(1, Math.floor(config.tetoHoras / Math.max(horasAluno, 0.01)));
+            const totalTurmas = turmaCount || Math.max(1, Math.ceil(totalAlunos / maxAlunosPorTurma));
+            const base = Math.floor(totalAlunos / totalTurmas);
+            const resto = totalAlunos % totalTurmas;
+            return Array.from({ length: totalTurmas }, (_, index) => ({
+                id: uid(),
+                turma: `${prefix}-${String(index + 1).padStart(2, '0')}`,
+                modalidade,
+                alunos: base + (index < resto ? 1 : 0),
+                visitasTotal,
+                visitasMes: Math.min(defaultMonthVisits(modalidade), visitasTotal)
+            })).filter(row => row.alunos > 0);
+        }
+
+        function loadDefaultData() {
+            turmas = [
+                ...buildBalancedRows('QUAL', MODALIDADES.QUAL, 870, DEFAULT_VISITS[MODALIDADES.QUAL]),
+                ...buildBalancedRows('TEC', MODALIDADES.TEC, 500, DEFAULT_VISITS[MODALIDADES.TEC])
+            ];
+            setStatus('Base média carregada: 870 alunos de qualificação e 500 alunos de técnica.', 'ok');
+            renderAll();
+        }
+
+        function readConfigFromInputs(syncMonthlyRows = true) {
+            config.valorHora = Math.max(0, num($('cfg-valor-hora').value));
+            config.horasPorVisita = Math.max(0, num($('cfg-horas-visita').value));
+            config.tetoHoras = Math.max(1, num($('cfg-teto').value));
+            config.visitasMesQual = Math.max(0, num($('cfg-qual-visitas').value));
+            config.visitasMesTec = Math.max(0, num($('cfg-tec-visitas').value));
+
+            if (syncMonthlyRows) {
+                turmas = turmas.map(row => ({
+                    ...row,
+                    visitasMes: Math.min(defaultMonthVisits(row.modalidade), row.visitasTotal)
+                }));
+            }
+        }
+
+        function setStatus(message, type = 'info') {
+            const el = $('import-status');
+            el.textContent = message;
+            el.className = 'status-text mt-3 ' + (
+                type === 'error' ? 'text-red-700' :
+                type === 'ok' ? 'text-emerald-700' :
+                'text-slate-600'
+            );
+        }
+
+        function enrichRow(row) {
+            const alunos = Math.max(0, num(row.alunos));
+            const visitasTotal = Math.max(0, num(row.visitasTotal));
+            const visitasMes = Math.max(0, Math.min(num(row.visitasMes), visitasTotal));
+            const totalVisitas = alunos * visitasTotal;
+            const horasTotais = totalVisitas * config.horasPorVisita;
+            const custoTotal = horasTotais * config.valorHora;
+            const visitasMesTotal = alunos * visitasMes;
+            const horasMes = visitasMesTotal * config.horasPorVisita;
+            const custoMes = horasMes * config.valorHora;
+            const saldo = config.tetoHoras - horasTotais;
+
+            return {
+                ...row,
+                alunos,
+                visitasTotal,
+                visitasMes,
+                totalVisitas,
+                horasTotais,
+                custoTotal,
+                visitasMesTotal,
+                horasMes,
+                custoMes,
+                saldo,
+                estourou: saldo < 0
+            };
+        }
+
+        function getEnrichedRows(rows = turmas) {
+            return rows.map(enrichRow);
+        }
+
+        function getFilteredRows() {
+            const modalidade = $('filter-modality').value;
+            const search = normalizeText($('filter-search').value);
+            const risk = $('filter-risk').value;
+
+            return getEnrichedRows().filter(row => {
+                if (modalidade !== 'all' && row.modalidade !== modalidade) return false;
+                if (search && !normalizeText(row.turma).includes(search)) return false;
+                if (risk === 'over' && !row.estourou) return false;
+                if (risk === 'ok' && row.estourou) return false;
+                return true;
+            });
+        }
+
+        function summarizeRows(rows) {
+            return rows.reduce((acc, row) => {
+                acc.alunos += row.alunos;
+                acc.visitasTotal += row.totalVisitas;
+                acc.horasTotal += row.horasTotais;
+                acc.custoTotal += row.custoTotal;
+                acc.visitasMes += row.visitasMesTotal;
+                acc.custoMes += row.custoMes;
+                acc.estouradas += row.estourou ? 1 : 0;
+                return acc;
+            }, {
+                alunos: 0,
+                visitasTotal: 0,
+                horasTotal: 0,
+                custoTotal: 0,
+                visitasMes: 0,
+                custoMes: 0,
+                estouradas: 0
+            });
+        }
+
+        function calcTravel(row) {
+            const km = Math.max(0, num(row.km));
+            const consumo = Math.max(0.01, num(row.consumo));
+            const valorCombustivel = Math.max(0, num(row.valorCombustivel));
+            const pedagio = Math.max(0, num(row.pedagio));
+            const outros = Math.max(0, num(row.outros));
+            const fator = row.veiculo === 'Próprio' ? 1.25 : 1;
+            const litrosBase = km / consumo;
+            const combustivel = litrosBase * fator * valorCombustivel;
+            const total = combustivel + pedagio + outros;
+            return { ...row, km, consumo, valorCombustivel, pedagio, outros, fator, litrosBase, combustivel, total };
+        }
+
+        function summarizeTravel() {
+            return travelRows.map(calcTravel).reduce((acc, row) => {
+                acc.km += row.km;
+                acc.combustivel += row.combustivel;
+                acc.pedagioOutros += row.pedagio + row.outros;
+                acc.total += row.total;
+                return acc;
+            }, { km: 0, combustivel: 0, pedagioOutros: 0, total: 0 });
+        }
+
+        function renderDashboard() {
+            const rows = getFilteredRows().sort((a, b) => b.horasTotais - a.horasTotais);
+            const totals = summarizeRows(rows);
+            const travel = summarizeTravel();
+
+            $('kpi-alunos').textContent = totals.alunos.toLocaleString('pt-BR');
+            $('kpi-visitas-total').textContent = totals.visitasTotal.toLocaleString('pt-BR');
+            $('kpi-horas-total').textContent = `${fmt(totals.horasTotal)}h`;
+            $('kpi-custo-total').textContent = brl(totals.custoTotal);
+            $('kpi-visitas-mes').textContent = totals.visitasMes.toLocaleString('pt-BR');
+            $('kpi-custo-mes').textContent = brl(totals.custoMes);
+            $('kpi-deslocamento').textContent = brl(travel.total);
+            $('kpi-estouradas').textContent = totals.estouradas.toLocaleString('pt-BR');
+
+            renderDashboardTable(rows);
+            renderCharts(rows, totals, travel);
+        }
+
+        function renderCharts(rows, totals, travel) {
+            const ctxHours = $('chart-hours').getContext('2d');
+            const topRows = rows.slice(0, 30);
+            if (chartHours) chartHours.destroy();
+            chartHours = new Chart(ctxHours, {
+                type: 'bar',
+                data: {
+                    labels: topRows.map(row => row.turma),
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: `Teto (${fmt(config.tetoHoras, 0)}h)`,
+                            data: topRows.map(() => config.tetoHoras),
+                            borderColor: '#f37021',
+                            borderWidth: 2,
+                            borderDash: [6, 4],
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: 'Horas previstas',
+                            data: topRows.map(row => row.horasTotais),
+                            backgroundColor: topRows.map(row => row.estourou ? '#ef4444' : '#004587'),
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true } },
+                        tooltip: {
+                            callbacks: {
+                                label(context) {
+                                    return `${context.dataset.label}: ${fmt(context.raw)}h`;
+                                }
+                            }
+                        }
+                    },
+                    scales: { y: { beginAtZero: true, suggestedMax: Math.max(config.tetoHoras * 1.2, 120) } }
+                }
+            });
+
+            const ctxCosts = $('chart-costs').getContext('2d');
+            if (chartCosts) chartCosts.destroy();
+            chartCosts = new Chart(ctxCosts, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Visitas no mês', 'Deslocamento'],
+                    datasets: [{
+                        data: [totals.custoMes, travel.total],
+                        backgroundColor: ['#004587', '#f37021'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '62%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label(context) {
+                                    return `${context.label}: ${brl(context.raw)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderDashboardTable(rows) {
+            const tbody = $('dashboard-table');
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-slate-500 py-8">Nenhuma turma encontrada com os filtros atuais.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(row => `
+                <tr class="${row.estourou ? 'row-alert' : ''}">
+                    <td class="font-black text-slate-800">${escapeHtml(row.turma)}</td>
+                    <td>${modalityPill(row.modalidade)}</td>
+                    <td class="text-right font-bold">${row.alunos.toLocaleString('pt-BR')}</td>
+                    <td class="text-right">${row.totalVisitas.toLocaleString('pt-BR')}</td>
+                    <td class="text-right font-black ${row.estourou ? 'text-red-700' : 'senac-blue-text'}">${fmt(row.horasTotais)}h</td>
+                    <td class="text-right font-bold ${row.estourou ? 'text-red-700' : 'text-emerald-700'}">${fmt(row.saldo)}h</td>
+                    <td class="text-right font-bold">${brl(row.custoTotal)}</td>
+                    <td class="text-right font-bold">${brl(row.custoMes)}</td>
+                    <td>${row.estourou ? '<span class="pill pill-red"><i class="fa-solid fa-circle-exclamation"></i>Retificar</span>' : '<span class="pill pill-green"><i class="fa-solid fa-check"></i>Dentro do teto</span>'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function modalityPill(modalidade) {
+            const cls = modalidade === MODALIDADES.TEC ? 'pill-orange' : 'pill-blue';
+            return `<span class="pill ${cls}">${escapeHtml(modalidade)}</span>`;
+        }
+
+        function renderEditableTable() {
+            const tbody = $('editable-table');
+            const rows = getEnrichedRows().sort((a, b) => a.modalidade.localeCompare(b.modalidade) || a.turma.localeCompare(b.turma));
+
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-slate-500 py-8">Inclua uma turma ou importe uma planilha.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(row => `
+                <tr data-id="${row.id}" class="${row.estourou ? 'row-alert' : ''}">
+                    <td><input class="input-sm min-w-[130px]" data-field="turma" value="${escapeAttr(row.turma)}"></td>
+                    <td>
+                        <select class="input-sm min-w-[135px]" data-field="modalidade">
+                            <option value="${MODALIDADES.QUAL}" ${row.modalidade === MODALIDADES.QUAL ? 'selected' : ''}>Qualificação</option>
+                            <option value="${MODALIDADES.TEC}" ${row.modalidade === MODALIDADES.TEC ? 'selected' : ''}>Técnica</option>
+                        </select>
+                    </td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="1" data-field="alunos" value="${row.alunos}"></td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="1" data-field="visitasTotal" value="${row.visitasTotal}"></td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="1" data-field="visitasMes" value="${row.visitasMes}"></td>
+                    <td class="text-right font-black">${fmt(row.horasTotais)}h</td>
+                    <td class="text-right font-bold">${brl(row.custoTotal)}</td>
+                    <td class="text-right font-bold">${brl(row.custoMes)}</td>
+                    <td><button class="btn btn-danger py-2 px-3" data-action="delete-row"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTurmasList() {
+            const options = [...new Set(turmas.map(row => row.turma).filter(Boolean))]
+                .sort((a, b) => a.localeCompare(b))
+                .map(turma => `<option value="${escapeAttr(turma)}"></option>`)
+                .join('');
+            $('turmas-list').innerHTML = options;
+        }
+
+        function renderTravel() {
+            const rows = travelRows.map(calcTravel);
+            const totals = summarizeTravel();
+            $('travel-kpi-km').textContent = fmt(totals.km);
+            $('travel-kpi-fuel').textContent = brl(totals.combustivel);
+            $('travel-kpi-other').textContent = brl(totals.pedagioOutros);
+            $('travel-kpi-total').textContent = brl(totals.total);
+
+            const tbody = $('travel-table');
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="14" class="text-center text-slate-500 py-8">Nenhum deslocamento lançado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(row => `
+                <tr data-id="${row.id}">
+                    <td><input class="input-sm min-w-[130px]" type="date" data-travel-field="data" value="${escapeAttr(row.data)}"></td>
+                    <td><input class="input-sm min-w-[120px]" data-travel-field="turma" value="${escapeAttr(row.turma)}"></td>
+                    <td><input class="input-sm min-w-[150px]" data-travel-field="destino" value="${escapeAttr(row.destino)}"></td>
+                    <td>
+                        <select class="input-sm min-w-[130px]" data-travel-field="veiculo">
+                            <option value="Senac" ${row.veiculo === 'Senac' ? 'selected' : ''}>Senac</option>
+                            <option value="Próprio" ${row.veiculo === 'Próprio' ? 'selected' : ''}>Próprio</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-sm min-w-[110px]" data-travel-field="combustivel">
+                            ${Object.keys(FUEL_CONSUMPTION).map(fuel => `<option value="${fuel}" ${row.combustivel === fuel ? 'selected' : ''}>${fuel}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.1" data-travel-field="km" value="${row.km}"></td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.1" data-travel-field="consumo" value="${row.consumo}"></td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.01" data-travel-field="valorCombustivel" value="${row.valorCombustivel}"></td>
+                    <td class="text-right font-bold">${fmt(row.fator, 2)}</td>
+                    <td class="text-right font-bold">${brl(row.combustivel)}</td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.01" data-travel-field="pedagio" value="${row.pedagio}"></td>
+                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.01" data-travel-field="outros" value="${row.outros}"></td>
+                    <td class="text-right font-black">${brl(row.total)}</td>
+                    <td><button class="btn btn-danger py-2 px-3" data-action="delete-travel"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderSimulation() {
+            const rows = getEnrichedRows(simulatedRows);
+            const totals = summarizeRows(rows);
+            $('sim-kpi-alunos').textContent = totals.alunos.toLocaleString('pt-BR');
+            $('sim-kpi-horas').textContent = `${fmt(totals.horasTotal)}h`;
+            $('sim-kpi-custo').textContent = brl(totals.custoTotal);
+            $('sim-kpi-alerta').textContent = totals.estouradas.toLocaleString('pt-BR');
+
+            const tbody = $('simulation-table');
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-slate-500 py-8">Rode uma simulação para visualizar o cenário.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.sort((a, b) => b.horasTotais - a.horasTotais).map(row => `
+                <tr class="${row.estourou ? 'row-alert' : ''}">
+                    <td class="font-black">${escapeHtml(row.turma)}</td>
+                    <td>${modalityPill(row.modalidade)}</td>
+                    <td class="text-right">${row.alunos.toLocaleString('pt-BR')}</td>
+                    <td class="text-right font-black">${fmt(row.horasTotais)}h</td>
+                    <td class="text-right font-bold ${row.estourou ? 'text-red-700' : 'text-emerald-700'}">${fmt(row.saldo)}h</td>
+                    <td class="text-right font-bold">${brl(row.custoTotal)}</td>
+                    <td>${row.estourou ? '<span class="pill pill-red">Retificar</span>' : '<span class="pill pill-green">Dentro do teto</span>'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderEditableTable();
+            renderTurmasList();
+            renderTravel();
+            renderSimulation();
+        }
+
+        function findColumn(row, aliases) {
+            const keys = Object.keys(row);
+            const normalized = keys.map(key => ({ key, norm: normalizeText(key) }));
+            for (const alias of aliases) {
+                const normAlias = normalizeText(alias);
+                const exact = normalized.find(item => item.norm === normAlias);
+                if (exact) return exact.key;
+            }
+            for (const alias of aliases) {
+                const normAlias = normalizeText(alias);
+                const partial = normalized.find(item => item.norm.includes(normAlias));
+                if (partial) return partial.key;
+            }
+            return null;
+        }
+
+        function inferModality(row, sheetName, fileName, fallback) {
+            const modalityCol = findColumn(row, ['modalidade', 'tipo', 'categoria', 'tipo curso', 'modalidade curso']);
+            const source = [modalityCol ? row[modalityCol] : '', sheetName, fileName].join(' ');
+            const normalized = normalizeText(source);
+            if (normalized.includes('qual')) return MODALIDADES.QUAL;
+            if (normalized.includes('tec')) return MODALIDADES.TEC;
+            if (fallback && fallback !== 'auto') return fallback;
+            return MODALIDADES.QUAL;
+        }
+
+        function isActiveRow(row) {
+            const statusCol = findColumn(row, ['status', 'situacao', 'situação', 'situacao matricula', 'status matricula']);
+            if (!statusCol) return true;
+            const status = normalizeText(row[statusCol]);
+            if (!status) return false;
+            if (status.includes('cancel') || status.includes('desist') || status.includes('inativ') || status.includes('tranc') || status.includes('conclu')) return false;
+            return status.includes('ativo') || status.includes('ativa') || status.includes('matric') || status.includes('cursando');
+        }
+
+        function rowsFromWorkbook(workbook, fileName, fallback) {
+            const groups = new Map();
+            let readRows = 0;
+            let ignoredRows = 0;
+
+            workbook.SheetNames.forEach(sheetName => {
+                const sheet = workbook.Sheets[sheetName];
+                const rows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
+                rows.forEach(row => {
+                    readRows += 1;
+                    if (!isActiveRow(row)) {
+                        ignoredRows += 1;
+                        return;
+                    }
+
+                    const turmaCol = findColumn(row, ['turma', 'cod turma', 'codigo turma', 'código turma', 'id turma']);
+                    const countCol = findColumn(row, ['alunos', 'qtd alunos', 'quantidade alunos', 'quantidade de alunos', 'volume alunos']);
+                    const visitsCol = findColumn(row, ['visitas', 'visitas total', 'visitas por aluno', 'qtd visitas']);
+                    const monthVisitsCol = findColumn(row, ['visitas mes', 'visitas mês', 'visitas no mes', 'visitas no mês']);
+                    const turma = String(turmaCol ? row[turmaCol] : '').trim() || 'Sem turma identificada';
+                    const modalidade = inferModality(row, sheetName, fileName, fallback);
+                    const alunos = countCol && num(row[countCol]) > 0 ? num(row[countCol]) : 1;
+                    const visitasTotal = visitsCol && num(row[visitsCol]) > 0 ? num(row[visitsCol]) : DEFAULT_VISITS[modalidade];
+                    const visitasMes = monthVisitsCol && num(row[monthVisitsCol]) >= 0
+                        ? Math.min(num(row[monthVisitsCol]), visitasTotal)
+                        : Math.min(defaultMonthVisits(modalidade), visitasTotal);
+                    const key = `${modalidade}::${turma}`;
+
+                    if (!groups.has(key)) {
+                        groups.set(key, {
+                            id: uid(),
+                            turma,
+                            modalidade,
+                            alunos: 0,
+                            visitasTotal,
+                            visitasMes
+                        });
+                    }
+                    const group = groups.get(key);
+                    group.alunos += alunos;
+                    group.visitasTotal = visitasTotal;
+                    group.visitasMes = visitasMes;
+                });
+            });
+
+            return { rows: [...groups.values()], readRows, ignoredRows };
+        }
+
+        async function importFiles(files) {
+            if (!files.length) {
+                setStatus('Selecione ao menos um arquivo Excel ou CSV.', 'error');
+                return;
+            }
+
+            const fallback = $('fallback-modality').value;
+            const allRows = [];
+            let totalRead = 0;
+            let totalIgnored = 0;
+
+            for (const file of files) {
+                const buffer = await file.arrayBuffer();
+                const workbook = XLSX.read(buffer, { type: 'array' });
+                const parsed = rowsFromWorkbook(workbook, file.name, fallback);
+                allRows.push(...parsed.rows);
+                totalRead += parsed.readRows;
+                totalIgnored += parsed.ignoredRows;
+            }
+
+            if (!allRows.length) {
+                setStatus('Nenhuma linha ativa foi localizada. Confira as colunas Status e Turma.', 'error');
+                return;
+            }
+
+            turmas = mergeImportedRows(allRows);
+            setStatus(`Importação concluída: ${totalRead.toLocaleString('pt-BR')} linhas lidas, ${totalIgnored.toLocaleString('pt-BR')} ignoradas e ${turmas.length} turmas geradas.`, 'ok');
+            renderAll();
+        }
+
+        function mergeImportedRows(rows) {
+            const map = new Map();
+            rows.forEach(row => {
+                const key = `${row.modalidade}::${row.turma}`;
+                if (!map.has(key)) {
+                    map.set(key, { ...row, id: uid() });
+                    return;
+                }
+                const current = map.get(key);
+                current.alunos += row.alunos;
+            });
+            return [...map.values()];
+        }
+
+        async function loadRemoteUrl() {
+            const url = $('remote-url').value.trim();
+            if (!url) {
+                setStatus('Informe uma URL pública de Excel ou CSV.', 'error');
+                return;
+            }
+
+            try {
+                setStatus('Lendo arquivo online...');
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const buffer = await response.arrayBuffer();
+                const workbook = XLSX.read(buffer, { type: 'array' });
+                const parsed = rowsFromWorkbook(workbook, url.split('/').pop() || 'arquivo-online', $('fallback-modality').value);
+                if (!parsed.rows.length) throw new Error('Nenhuma turma ativa encontrada.');
+                turmas = mergeImportedRows(parsed.rows);
+                setStatus(`URL importada: ${parsed.readRows.toLocaleString('pt-BR')} linhas lidas e ${turmas.length} turmas geradas.`, 'ok');
+                renderAll();
+            } catch (error) {
+                setStatus('Não foi possível ler a URL. Use um link público direto para .xlsx/.csv ou faça upload do arquivo.', 'error');
+                console.error(error);
+            }
+        }
+
+        function updateRow(id, field, value) {
+            turmas = turmas.map(row => {
+                if (row.id !== id) return row;
+                const next = { ...row };
+                if (['alunos', 'visitasTotal', 'visitasMes'].includes(field)) {
+                    next[field] = Math.max(0, num(value));
+                } else {
+                    next[field] = value;
+                }
+                if (field === 'modalidade') {
+                    next.visitasTotal = DEFAULT_VISITS[value] || next.visitasTotal;
+                    next.visitasMes = Math.min(defaultMonthVisits(value), next.visitasTotal);
+                }
+                return next;
+            });
+            renderAll();
+        }
+
+        function addRow() {
+            turmas.push({
+                id: uid(),
+                turma: `NOVA-${turmas.length + 1}`,
+                modalidade: MODALIDADES.QUAL,
+                alunos: 0,
+                visitasTotal: DEFAULT_VISITS[MODALIDADES.QUAL],
+                visitasMes: Math.min(config.visitasMesQual, DEFAULT_VISITS[MODALIDADES.QUAL])
+            });
+            renderAll();
+        }
+
+        function suggestSimulationTurmas() {
+            readConfigFromInputs(false);
+            const qualAlunos = intNum($('sim-qual-alunos').value);
+            const tecAlunos = intNum($('sim-tec-alunos').value);
+            $('sim-qual-turmas').value = suggestTurmas(qualAlunos, DEFAULT_VISITS[MODALIDADES.QUAL]);
+            $('sim-tec-turmas').value = suggestTurmas(tecAlunos, DEFAULT_VISITS[MODALIDADES.TEC]);
+            runSimulation();
+        }
+
+        function suggestTurmas(totalAlunos, visitasTotal) {
+            const horasAluno = visitasTotal * config.horasPorVisita;
+            const maxAlunos = Math.max(1, Math.floor(config.tetoHoras / Math.max(horasAluno, 0.01)));
+            return Math.max(1, Math.ceil(totalAlunos / maxAlunos));
+        }
+
+        function runSimulation() {
+            readConfigFromInputs(false);
+            const qualAlunos = intNum($('sim-qual-alunos').value);
+            const tecAlunos = intNum($('sim-tec-alunos').value);
+            const qualTurmas = Math.max(1, intNum($('sim-qual-turmas').value));
+            const tecTurmas = Math.max(1, intNum($('sim-tec-turmas').value));
+
+            simulatedRows = [
+                ...buildBalancedRows('SIM-QUAL', MODALIDADES.QUAL, qualAlunos, DEFAULT_VISITS[MODALIDADES.QUAL], qualTurmas),
+                ...buildBalancedRows('SIM-TEC', MODALIDADES.TEC, tecAlunos, DEFAULT_VISITS[MODALIDADES.TEC], tecTurmas)
+            ];
+            const totals = summarizeRows(getEnrichedRows(simulatedRows));
+            $('simulation-status').textContent = `Cenário com ${simulatedRows.length} turmas e ${totals.estouradas} acima do teto.`;
+            renderSimulation();
+        }
+
+        function applySimulation() {
+            if (!simulatedRows.length) runSimulation();
+            turmas = simulatedRows.map(row => ({ ...row, id: uid() }));
+            setStatus('Simulação aplicada à base principal.', 'ok');
+            switchTab('dashboard');
+            renderAll();
+        }
+
+        function addTravel() {
+            const fuel = $('travel-fuel').value;
+            const consumo = num($('travel-consumption').value) || FUEL_CONSUMPTION[fuel] || 10;
+            travelRows.push({
+                id: uid(),
+                data: $('travel-date').value || todayISO(),
+                turma: $('travel-class').value.trim(),
+                destino: $('travel-destination').value.trim(),
+                veiculo: $('travel-vehicle').value,
+                combustivel: fuel,
+                km: num($('travel-km').value),
+                consumo,
+                valorCombustivel: num($('travel-fuel-price').value),
+                pedagio: num($('travel-toll').value),
+                outros: num($('travel-other').value)
+            });
+            renderAll();
+        }
+
+        function updateTravel(id, field, value) {
+            travelRows = travelRows.map(row => {
+                if (row.id !== id) return row;
+                const next = { ...row };
+                if (['km', 'consumo', 'valorCombustivel', 'pedagio', 'outros'].includes(field)) {
+                    next[field] = Math.max(0, num(value));
+                } else {
+                    next[field] = value;
+                }
+                if (field === 'combustivel' && (!next.consumo || next.consumo === row.consumo)) {
+                    next.consumo = FUEL_CONSUMPTION[value] || next.consumo;
+                }
+                return next;
+            });
+            renderAll();
+        }
+
+        function exportCsv(rows, filename, headers) {
+            const lines = [
+                headers.map(header => csvCell(header.label)).join(';'),
+                ...rows.map(row => headers.map(header => csvCell(header.value(row))).join(';'))
+            ];
+            const blob = new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportData() {
+            const rows = getEnrichedRows();
+            exportCsv(rows, 'orcamento-supervisao-turmas.csv', [
+                { label: 'Turma', value: row => row.turma },
+                { label: 'Modalidade', value: row => row.modalidade },
+                { label: 'Alunos', value: row => row.alunos },
+                { label: 'Visitas por aluno', value: row => row.visitasTotal },
+                { label: 'Visitas no mes por aluno', value: row => row.visitasMes },
+                { label: 'Visitas totais', value: row => row.totalVisitas },
+                { label: 'Horas totais', value: row => row.horasTotais.toFixed(2).replace('.', ',') },
+                { label: 'Custo total', value: row => row.custoTotal.toFixed(2).replace('.', ',') },
+                { label: 'Custo mes', value: row => row.custoMes.toFixed(2).replace('.', ',') },
+                { label: 'Saldo teto', value: row => row.saldo.toFixed(2).replace('.', ',') },
+                { label: 'Status', value: row => row.estourou ? 'Retificar' : 'Dentro do teto' }
+            ]);
+        }
+
+        function exportTravel() {
+            const rows = travelRows.map(calcTravel);
+            exportCsv(rows, 'orcamento-supervisao-deslocamentos.csv', [
+                { label: 'Data', value: row => row.data },
+                { label: 'Turma', value: row => row.turma },
+                { label: 'Destino', value: row => row.destino },
+                { label: 'Veiculo', value: row => row.veiculo },
+                { label: 'Combustivel', value: row => row.combustivel },
+                { label: 'KM', value: row => row.km.toFixed(1).replace('.', ',') },
+                { label: 'Consumo medio', value: row => row.consumo.toFixed(1).replace('.', ',') },
+                { label: 'Valor combustivel', value: row => row.valorCombustivel.toFixed(2).replace('.', ',') },
+                { label: 'Fator', value: row => row.fator.toFixed(2).replace('.', ',') },
+                { label: 'Litros base', value: row => row.litrosBase.toFixed(2).replace('.', ',') },
+                { label: 'Combustivel/reembolso', value: row => row.combustivel.toFixed(2).replace('.', ',') },
+                { label: 'Pedagio', value: row => row.pedagio.toFixed(2).replace('.', ',') },
+                { label: 'Outros', value: row => row.outros.toFixed(2).replace('.', ',') },
+                { label: 'Total', value: row => row.total.toFixed(2).replace('.', ',') }
+            ]);
+        }
+
+        function csvCell(value) {
+            let text = String(value ?? '');
+            if (/^[=+\-@]/.test(text)) text = `'${text}`;
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }[char]));
+        }
+
+        function escapeAttr(value) {
+            return escapeHtml(value).replace(/`/g, '&#096;');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === `tab-${tab}`);
+            });
+        }
+
+        function bindEvents() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+            });
+
+            $('import-files').addEventListener('click', () => importFiles([...$('file-input').files]));
+            $('load-url').addEventListener('click', loadRemoteUrl);
+            $('reset-default').addEventListener('click', loadDefaultData);
+            $('apply-config').addEventListener('click', () => {
+                readConfigFromInputs(true);
+                renderAll();
+            });
+            ['filter-modality', 'filter-risk'].forEach(id => $(id).addEventListener('change', renderDashboard));
+            $('filter-search').addEventListener('input', renderDashboard);
+
+            $('add-row').addEventListener('click', addRow);
+            $('export-data').addEventListener('click', exportData);
+            $('editable-table').addEventListener('change', event => {
+                const target = event.target;
+                const row = target.closest('tr[data-id]');
+                if (!row || !target.dataset.field) return;
+                updateRow(row.dataset.id, target.dataset.field, target.value);
+            });
+            $('editable-table').addEventListener('click', event => {
+                const button = event.target.closest('[data-action="delete-row"]');
+                if (!button) return;
+                const row = button.closest('tr[data-id]');
+                turmas = turmas.filter(item => item.id !== row.dataset.id);
+                renderAll();
+            });
+
+            $('auto-turmas').addEventListener('click', suggestSimulationTurmas);
+            $('run-simulation').addEventListener('click', runSimulation);
+            $('apply-simulation').addEventListener('click', applySimulation);
+
+            $('travel-fuel').addEventListener('change', event => {
+                $('travel-consumption').value = FUEL_CONSUMPTION[event.target.value] || 10;
+            });
+            $('add-travel').addEventListener('click', addTravel);
+            $('export-travel').addEventListener('click', exportTravel);
+            $('travel-table').addEventListener('change', event => {
+                const target = event.target;
+                const row = target.closest('tr[data-id]');
+                if (!row || !target.dataset.travelField) return;
+                updateTravel(row.dataset.id, target.dataset.travelField, target.value);
+            });
+            $('travel-table').addEventListener('click', event => {
+                const button = event.target.closest('[data-action="delete-travel"]');
+                if (!button) return;
+                const row = button.closest('tr[data-id]');
+                travelRows = travelRows.filter(item => item.id !== row.dataset.id);
+                renderAll();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            $('travel-date').value = todayISO();
+            bindEvents();
+            loadDefaultData();
+            suggestSimulationTurmas();
+        });
+    </script>
+</body>
+</html>
