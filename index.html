@@ -141,13 +141,15 @@
                 </div>
                 <div class="min-w-0">
                     <h1 class="text-lg font-black tracking-wide truncate">Portal da Supervisão</h1>
-                    <p class="text-[11px] text-blue-100 font-semibold truncate uppercase tracking-wider">Gestão Orçamentária em Nuvem</p>
+                    <p class="text-[11px] text-blue-100 font-semibold truncate uppercase tracking-wider">Gestão Orçamentária Online</p>
                 </div>
             </div>
             <div class="hidden sm:flex items-center gap-4">
                 <div class="text-right">
                     <p class="text-sm font-bold">Senac Portão - PR</p>
-                    <p class="text-xs text-blue-100 flex items-center justify-end gap-1" id="cloud-status"><i class="fa-solid fa-circle text-[8px] text-yellow-400"></i> Conectando...</p>
+                    <p class="text-xs text-blue-100 flex items-center justify-end gap-1" id="cloud-status">
+                        <i class="fa-solid fa-circle text-[8px] text-yellow-400"></i> Inicializando...
+                    </p>
                 </div>
                 <button id="clear-data" class="btn btn-danger py-2 px-3 text-xs" title="Apaga todas as planilhas carregadas e recomeça a execução do zero">
                     <i class="fa-solid fa-trash-arrow-up"></i> Zerar Execução
@@ -206,8 +208,8 @@
                         <label class="field-label">Teto horas / turma</label>
                         <input id="cfg-teto" type="number" step="1" min="1" class="input font-bold" value="100">
                     </div>
-                    <button id="apply-config" class="btn btn-orange w-full mt-2">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <button id="apply-config" type="button" class="btn btn-orange w-full mt-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
                         Salvar e Recalcular
                     </button>
                 </div>
@@ -245,7 +247,7 @@
                         <input id="filter-search" class="input" placeholder="Digite código da turma...">
                     </div>
                 </div>
-                <button id="btn-print" class="btn btn-primary whitespace-nowrap">
+                <button id="btn-print" type="button" class="btn btn-primary whitespace-nowrap">
                     <i class="fa-solid fa-file-pdf"></i>
                     Gerar Relatório PDF
                 </button>
@@ -291,7 +293,7 @@
             <!-- BLOCO DINÂMICO: EXECUÇÃO REAL -->
             <div class="flex items-center gap-3 mb-2 mt-8">
                 <i class="fa-solid fa-chart-line text-xl text-senac-blue"></i>
-                <h3 class="text-xl font-black text-slate-800">Uso Real e Saldo (Planilhas em Nuvem)</h3>
+                <h3 class="text-xl font-black text-slate-800">Uso Real e Saldo</h3>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -403,12 +405,12 @@
             <div class="panel p-5">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                     <div>
-                        <h2 class="text-lg font-black flex items-center gap-2"><i class="fa-solid fa-pen-to-square senac-blue-text"></i> Dados em Nuvem (Edição Manual)</h2>
-                        <p class="text-sm text-slate-500 mt-1">Qualquer alteração feita aqui é sincronizada automaticamente na nuvem.</p>
+                        <h2 class="text-lg font-black flex items-center gap-2"><i class="fa-solid fa-pen-to-square senac-blue-text"></i> Dados Sincronizados (Edição Manual)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Qualquer alteração feita aqui salva na Nuvem (se ativo) ou no Cache Local do Navegador.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button id="add-row" class="btn btn-outline"><i class="fa-solid fa-plus"></i> Inserir Extra</button>
-                        <button id="export-data" class="btn btn-orange"><i class="fa-solid fa-file-export"></i> Exportar CSV</button>
+                        <button id="add-row" type="button" class="btn btn-outline"><i class="fa-solid fa-plus"></i> Inserir Extra</button>
+                        <button id="export-data" type="button" class="btn btn-orange"><i class="fa-solid fa-file-export"></i> Exportar CSV</button>
                     </div>
                 </div>
             </div>
@@ -443,12 +445,12 @@
                     <div><label class="field-label">Veículo</label><select id="travel-vehicle" class="input"><option>Senac</option><option>Próprio</option></select></div>
                     <div><label class="field-label">KM (Ida+Volta)</label><input id="travel-km" type="number" class="input" value="0"></div>
                     <div><label class="field-label">Pedágio/Outros</label><input id="travel-other" type="number" class="input" value="0"></div>
-                    <button id="add-travel" class="btn btn-primary w-full"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar</button>
+                    <button id="add-travel" type="button" class="btn btn-primary w-full"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar</button>
                 </div>
                 <datalist id="turmas-list"></datalist>
             </div>
             <div class="panel p-5">
-                <div class="flex justify-between mb-3"><h2 class="font-black text-lg">Histórico de Gastos</h2><button id="export-travel" class="btn btn-outline py-1 px-3 text-xs"><i class="fa-solid fa-download"></i> CSV</button></div>
+                <div class="flex justify-between mb-3"><h2 class="font-black text-lg">Histórico de Gastos</h2><button id="export-travel" type="button" class="btn btn-outline py-1 px-3 text-xs"><i class="fa-solid fa-download"></i> CSV</button></div>
                 <div class="table-wrap max-h-[400px]">
                     <table>
                         <thead><tr><th>Turma</th><th>Destino</th><th>Veículo</th><th class="text-right">KM</th><th class="text-right">Extra</th><th class="text-right">Total (R$)</th><th>Ação</th></tr></thead>
@@ -459,33 +461,31 @@
         </section>
     </main>
 
-    <!-- FIREBASE CLOUD SCRIPT -->
+    <!-- FIREBASE & CORE SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, getDocs, setDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration & Initialization
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        let userId = null;
-
+        // Constants & State
         const MODALIDADES = { QUAL: 'Qualificação', TEC: 'Técnica' };
         const DEFAULT_VISITS = { [MODALIDADES.QUAL]: 3, [MODALIDADES.TEC]: 6 };
-        
         const ALUNOS_BASE_QUAL = 870;
         const ALUNOS_BASE_TEC = 500;
         const ALUNOS_META = ALUNOS_BASE_QUAL + ALUNOS_BASE_TEC;
 
         let config = { valorHora: 3.75, horasPorVisita: 0.5, tetoHoras: 100 };
-        let turmas = []; // Execução em nuvem
+        let turmas = []; 
         let travelRows = [];
         let chartHours = null;
         let chartModality = null;
 
+        // Cloud Variables
+        let useCloud = false;
+        let app, auth, db, userId = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Helpers
         const $ = id => document.getElementById(id);
         const brl = v => (Number(v)||0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         const num = v => Number(String(v??'').replace(',', '.'))||0;
@@ -493,47 +493,211 @@
         const uid = () => Math.random().toString(36).slice(2, 10);
         const norm = v => String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
-        // Helpers Visuais
         function setStatus(msg, type='info') {
             const el = $('import-status');
-            if(el) el.innerHTML = `<span class="${type==='error'?'text-red-600':type==='ok'?'text-emerald-600':'text-senac-blue'}">${msg}</span>`;
+            if(el) el.innerHTML = `<span class="${type==='error'?'text-red-600 font-bold':type==='ok'?'text-emerald-600 font-bold':'text-senac-blue'}">${msg}</span>`;
         }
 
-        function setCloudStatus(connected) {
+        function setCloudStatus(connected, fallback=false) {
             const el = $('cloud-status');
-            if(el) el.innerHTML = connected 
-                ? '<i class="fa-solid fa-circle text-[8px] text-green-400"></i> Nuvem Sincronizada'
-                : '<i class="fa-solid fa-circle text-[8px] text-yellow-400"></i> Conectando...';
+            if(el) {
+                if(connected) el.innerHTML = '<i class="fa-solid fa-circle text-[8px] text-green-400"></i> Nuvem Sincronizada';
+                else if(fallback) el.innerHTML = '<i class="fa-solid fa-circle text-[8px] text-orange-400"></i> Modo Offline Local';
+                else el.innerHTML = '<i class="fa-solid fa-circle text-[8px] text-yellow-400"></i> Conectando...';
+            }
         }
 
-        // ---------------- AUTH E NUVEM ----------------
-        async function initAuth() {
+        // --- 1. LIGAÇÕES DE BOTÕES DA INTERFACE VISUAL (RODA IMEDIATAMENTE) ---
+        function bindUIEvents() {
+            // Drop Zone & Inputs
+            const dropZone = $('drop-zone');
+            if(dropZone) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
+                    dropZone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }, false);
+                    document.body.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }, false);
+                });
+                ['dragenter', 'dragover'].forEach(evt => dropZone.addEventListener(evt, () => dropZone.classList.add('dragover'), false));
+                ['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, () => dropZone.classList.remove('dragover'), false));
+                dropZone.addEventListener('drop', e => { if(e.dataTransfer?.files?.length) processFiles(e.dataTransfer.files); }, false);
+            }
+            $('btn-select-files')?.addEventListener('click', () => $('file-input').click());
+            $('file-input')?.addEventListener('change', e => { if(e.target.files.length) processFiles(e.target.files); });
+
+            // Abas de Navegação
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                $('tab-' + btn.dataset.tab).classList.add('active');
+            }));
+
+            // Controles Principais
+            $('apply-config')?.addEventListener('click', () => {
+                config.valorHora = num($('cfg-valor-hora').value);
+                config.horasPorVisita = num($('cfg-horas-visita').value);
+                config.tetoHoras = num($('cfg-teto').value);
+                if(useCloud) saveConfigToCloud(); else saveDataLocally();
+                renderAll();
+            });
+
+            $('clear-data')?.addEventListener('click', async () => {
+                if(!confirm("ATENÇÃO: Deseja zerar toda a sua execução? A Meta Base de Consulta continuará a mesma.")) return;
+                setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Apagando dados...', 'info');
+                
+                if (useCloud) {
+                    const promises = [];
+                    turmas.forEach(t => promises.push(deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', t.id))));
+                    travelRows.forEach(t => promises.push(deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', t.id))));
+                    try { await Promise.all(promises); } catch(e){}
+                } else {
+                    localStorage.removeItem('senac_execucao');
+                    localStorage.removeItem('senac_travel');
+                }
+                
+                turmas = []; travelRows = [];
+                setStatus('<i class="fa-solid fa-trash-check"></i> Execução completamente zerada.', 'ok');
+                renderAll();
+            });
+
+            $('btn-print')?.addEventListener('click', () => {
+                $('print-date').innerText = `Emitido em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`;
+                window.print();
+            });
+
+            // Filtros
+            ['filter-modality', 'filter-risk'].forEach(id => $(id)?.addEventListener('change', renderDashboard));
+            $('filter-search')?.addEventListener('input', renderDashboard);
+            
+            // Tabela Manual 
+            $('add-row')?.addEventListener('click', () => {
+                const nova = {id: uid(), turma: 'Nova Turma', modalidade: MODALIDADES.QUAL, alunos: 1, visitasTotal: 3, visitasRealizadas: 0};
+                turmas.push(nova);
+                if(useCloud) saveTurmaToCloud(nova); else saveDataLocally();
+                renderAll();
+            });
+
+            $('editable-table')?.addEventListener('change', e => {
+                const tr = e.target.closest('tr');
+                if(!tr || !e.target.dataset.field) return;
+                const idx = turmas.findIndex(t => t.id === tr.dataset.id);
+                if(idx > -1) {
+                    turmas[idx][e.target.dataset.field] = e.target.type==='number' ? num(e.target.value) : e.target.value;
+                    if(useCloud) saveTurmaToCloud(turmas[idx]); else saveDataLocally();
+                    renderAll();
+                }
+            });
+
+            $('editable-table')?.addEventListener('click', e => {
+                const btn = e.target.closest('button[data-action="delete"]');
+                if(btn) { 
+                    const idDel = btn.closest('tr').dataset.id;
+                    turmas = turmas.filter(t => t.id !== idDel); 
+                    if(useCloud) deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', idDel)).catch(()=>{});
+                    else saveDataLocally();
+                    renderAll(); 
+                }
+            });
+
+            // Deslocamentos
+            $('add-travel')?.addEventListener('click', () => {
+                const novaV = {
+                    id: uid(),
+                    data: new Date().toISOString().split('T')[0],
+                    turma: $('travel-class')?.value || '',
+                    destino: $('travel-destination')?.value || '',
+                    veiculo: $('travel-vehicle')?.value || 'Senac',
+                    combustivel: 'Gasolina',
+                    km: num($('travel-km')?.value),
+                    valorCombustivel: 6,
+                    pedagio: num($('travel-other')?.value),
+                    outros: 0
+                };
+                travelRows.push(novaV);
+                if(useCloud) saveTravelToCloud(novaV); else saveDataLocally();
+                renderAll();
+                alert("Deslocamento salvo com sucesso!");
+            });
+
+            $('travel-table')?.addEventListener('click', e => {
+                const btn = e.target.closest('button[data-action="delete"]');
+                if(btn) { 
+                    const idDel = btn.closest('tr').dataset.id;
+                    travelRows = travelRows.filter(t => t.id !== idDel); 
+                    if(useCloud) deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', idDel)).catch(()=>{});
+                    else saveDataLocally();
+                    renderAll(); 
+                }
+            });
+        }
+
+        // --- 2. LOCAL STORAGE (MODO OFFLINE / FALLBACK) ---
+        function saveDataLocally() {
+            localStorage.setItem('senac_execucao', JSON.stringify(turmas));
+            localStorage.setItem('senac_travel', JSON.stringify(travelRows));
+            localStorage.setItem('senac_config', JSON.stringify(config));
+        }
+
+        function loadDataLocally() {
+            const savedConfig = localStorage.getItem('senac_config');
+            if (savedConfig) {
+                config = { ...config, ...JSON.parse(savedConfig) };
+                if($('cfg-valor-hora')) $('cfg-valor-hora').value = config.valorHora;
+                if($('cfg-horas-visita')) $('cfg-horas-visita').value = config.horasPorVisita;
+                if($('cfg-teto')) $('cfg-teto').value = config.tetoHoras;
+            }
+
+            const savedTurmas = localStorage.getItem('senac_execucao');
+            const savedTravel = localStorage.getItem('senac_travel');
+            
+            turmas = (savedTurmas && savedTurmas !== '[]') ? JSON.parse(savedTurmas) : [];
+            travelRows = savedTravel ? JSON.parse(savedTravel) : [];
+            
+            setStatus('<i class="fa-solid fa-hard-drive"></i> Pronto para novos envios (Modo Local).', 'info');
+            renderAll();
+        }
+
+        // --- 3. CONEXÃO SEGURA COM A NUVEM FIREBASE ---
+        async function initFirebaseSafe() {
             try {
+                // Checagem de segurança pra não quebrar a página
+                const configStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+                if (!configStr || configStr.trim() === '') throw new Error("Sem configuração de nuvem");
+
+                const firebaseConfig = JSON.parse(configStr);
+                if (!firebaseConfig.projectId) throw new Error("Configuração de nuvem inválida");
+
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Autenticação
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
                     await signInAnonymously(auth);
                 }
+
+                // Listener de Estado
+                onAuthStateChanged(auth, user => {
+                    if (user) {
+                        userId = user.uid;
+                        useCloud = true;
+                        setCloudStatus(true, false);
+                        loadDataFromCloud();
+                    }
+                });
+
             } catch (error) {
-                console.error("Erro na autenticação:", error);
+                console.warn("Nuvem bloqueada/indisponível. Inicializando Offline Seguro.", error);
+                useCloud = false;
+                setCloudStatus(false, true);
+                loadDataLocally(); 
             }
         }
 
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                userId = user.uid;
-                setCloudStatus(true);
-                loadDataFromCloud();
-            }
-        });
-
-        // Referências Firestore
-        const getTurmasRef = () => collection(db, 'artifacts', appId, 'users', userId, 'turmas');
-        const getTravelRef = () => collection(db, 'artifacts', appId, 'users', userId, 'travel');
-        const getConfigDoc = () => doc(db, 'artifacts', appId, 'users', userId, 'config', 'main');
-
         async function loadDataFromCloud() {
-            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Carregando execução salva na nuvem...', 'info');
+            if(!userId) return;
+            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Sincronizando dados com a nuvem...', 'info');
             try {
                 const configSnap = await getDocs(collection(db, 'artifacts', appId, 'users', userId, 'config'));
                 if (!configSnap.empty) {
@@ -543,68 +707,91 @@
                     if($('cfg-teto')) $('cfg-teto').value = config.tetoHoras;
                 }
 
-                const tSnap = await getDocs(getTurmasRef());
+                const tSnap = await getDocs(collection(db, 'artifacts', appId, 'users', userId, 'turmas'));
                 turmas = tSnap.docs.map(d => d.data());
 
-                const trSnap = await getDocs(getTravelRef());
+                const trSnap = await getDocs(collection(db, 'artifacts', appId, 'users', userId, 'travel'));
                 travelRows = trSnap.docs.map(d => d.data());
 
-                setStatus('<i class="fa-solid fa-cloud-check"></i> Pronto para novos envios.', 'ok');
+                setStatus('<i class="fa-solid fa-cloud-check"></i> Pronto para envios em Nuvem.', 'ok');
                 renderAll();
-            } catch (error) {
-                console.error("Erro ao puxar dados:", error);
-                setStatus('Aviso: Falha ao carregar nuvem.', 'error');
+            } catch (e) {
+                console.error("Falha ao ler Nuvem:", e);
+                useCloud = false;
+                setCloudStatus(false, true);
+                loadDataLocally(); // Recai pro offline caso a leitura falhe
             }
         }
 
-        async function saveConfigToCloud() {
-            if(!userId) return;
-            try { await setDoc(getConfigDoc(), config); } catch(e) { console.error(e); }
+        async function saveConfigToCloud() { try { await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'config', 'main'), config); } catch(e){} }
+        async function saveTurmaToCloud(t) { try { await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', t.id), t); } catch(e){} }
+        async function saveTravelToCloud(t) { try { await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', t.id), t); } catch(e){} }
+
+        // --- 4. LÓGICA DE DADOS (PLANILHAS E CÁLCULOS) ---
+        function findCol(row, aliases) {
+            const keys = Object.keys(row), norms = keys.map(k => ({k, n: norm(k)}));
+            for(let a of aliases) { let ex = norms.find(i=>i.n===norm(a)); if(ex) return ex.k; }
+            for(let a of aliases) { let p = norms.find(i=>i.n.includes(norm(a))); if(p) return p.k; }
+            return null;
         }
 
-        async function saveTurmaToCloud(turmaObj) {
-            if(!userId) return;
-            try { await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', turmaObj.id), turmaObj); } catch(e) { console.error(e); }
-        }
+        async function processFiles(files) {
+            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Lendo e somando planilhas...', 'info');
+            const uploadBatchMap = new Map();
+            let totalLidos = 0;
 
-        async function deleteTurmaFromCloud(id) {
-            if(!userId) return;
-            try { await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', id)); } catch(e) { console.error(e); }
-        }
+            for(let file of files) {
+                const buffer = await file.arrayBuffer();
+                const wb = XLSX.read(buffer, {type: 'array'});
+                wb.SheetNames.forEach(sn => {
+                    XLSX.utils.sheet_to_json(wb.Sheets[sn], {defval:''}).forEach(row => {
+                        const isDesligado = norm(row[findCol(row, ['desligado', 'encerrado'])]||'') === 'sim';
+                        const status = norm(row[findCol(row, ['status', 'situacao'])]||'');
+                        if(isDesligado || status.includes('cancel')||status.includes('desist')||status.includes('inativ')) return;
+                        
+                        totalLidos++;
+                        const turma = String(row[findCol(row, ['turma'])]||'').trim() || 'Desconhecida';
+                        const isTec = Object.keys(row).some(k => norm(k).includes('4 visita')||norm(k).includes('5 visita')||norm(k).includes('6 visita'));
+                        const mod = isTec ? MODALIDADES.TEC : MODALIDADES.QUAL;
+                        const visits = Object.keys(row).filter(k => /^\d+ª?\s*visita/i.test(k)).filter(k => String(row[k]).trim()).length;
+                        const key = `${mod}::${turma}`;
+                        
+                        if(!uploadBatchMap.has(key)) uploadBatchMap.set(key, {id: uid(), turma, modalidade: mod, alunos: 0, visitasTotal: DEFAULT_VISITS[mod], visitasRealizadas: 0});
+                        const g = uploadBatchMap.get(key);
+                        g.alunos += 1;
+                        g.visitasRealizadas += visits;
+                    });
+                });
+            }
 
-        async function saveTravelToCloud(travelObj) {
-            if(!userId) return;
-            try { await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', travelObj.id), travelObj); } catch(e) { console.error(e); }
-        }
+            if(uploadBatchMap.size > 0) {
+                const existingMap = new Map(turmas.map(t => [`${t.modalidade}::${t.turma}`, t]));
+                const cloudPromises = [];
 
-        async function clearAllCloudData() {
-            if(confirm("ATENÇÃO: Deseja zerar toda a sua execução? Isso apagará as turmas em nuvem. A Meta Base não será afetada.")) {
-                setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Apagando dados na nuvem...', 'info');
-                const promises = [];
-                turmas.forEach(t => promises.push(deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', t.id))));
-                travelRows.forEach(t => promises.push(deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', t.id))));
+                uploadBatchMap.forEach((batchRow, key) => {
+                    if (existingMap.has(key)) batchRow.id = existingMap.get(key).id;
+                    existingMap.set(key, batchRow);
+                    if (useCloud) cloudPromises.push(saveTurmaToCloud(batchRow));
+                });
+
+                if(useCloud) {
+                    try { await Promise.all(cloudPromises); } catch(e){}
+                }
                 
-                await Promise.all(promises);
-                turmas = [];
-                travelRows = [];
-                setStatus('<i class="fa-solid fa-trash-check"></i> Execução completamente zerada.', 'ok');
+                turmas = [...existingMap.values()];
+                if(!useCloud) saveDataLocally();
+                
+                setStatus(`<i class="fa-solid fa-check"></i> <b>${totalLidos} alunos</b> consolidados com sucesso!`, 'ok');
                 renderAll();
+            } else {
+                setStatus('<i class="fa-solid fa-circle-exclamation"></i> Nenhum aluno ativo reconhecido nas planilhas.', 'error');
             }
         }
 
-        // ---------------- CALCULADORA E RENDER ----------------
         function getPrevisaoBase() {
             const vTotal = (ALUNOS_BASE_QUAL * DEFAULT_VISITS[MODALIDADES.QUAL]) + (ALUNOS_BASE_TEC * DEFAULT_VISITS[MODALIDADES.TEC]);
             const chTotal = vTotal * config.horasPorVisita;
             return { visitas: vTotal, chTotal, orcamentoTotal: chTotal * config.valorHora };
-        }
-
-        function renderPrevisaoGeral() {
-            const base = getPrevisaoBase();
-            if($('base-visitas')) $('base-visitas').textContent = base.visitas.toLocaleString('pt-BR');
-            if($('base-ch')) $('base-ch').textContent = fmt(base.chTotal) + 'h';
-            if($('base-orcamento')) $('base-orcamento').textContent = brl(base.orcamentoTotal);
-            return base;
         }
 
         function enrichRow(row) {
@@ -615,8 +802,6 @@
             return { ...row, alunos: a, visitasTotal: vt, visitasRealizadas: vr, totalVisitasPrevistas: tp, horasTotaisPrevistas: hp, custoTotalPrevisto: cp, horasUtilizadas: hu, valorUtilizado: vu, horasRestantes: hr, custoRestante: cr, saldoTeto: st, estourou: st < 0 };
         }
 
-        function getEnrichedRows() { return turmas.map(enrichRow); }
-        
         function summarizeRows(rows) {
             return rows.reduce((acc, r) => {
                 acc.a += r.alunos; acc.tp += r.totalVisitasPrevistas; acc.vr += r.visitasRealizadas;
@@ -628,10 +813,15 @@
             }, {a:0, tp:0, vr:0, hp:0, hu:0, hr:0, cp:0, vu:0, cr:0, est:0, custoQual:0, custoTec:0});
         }
 
+        // --- 5. RENDERIZAÇÃO DA INTERFACE ---
         function renderDashboard() {
-            const base = renderPrevisaoGeral(); 
+            const base = getPrevisaoBase();
+            if($('base-visitas')) $('base-visitas').textContent = base.visitas.toLocaleString('pt-BR');
+            if($('base-ch')) $('base-ch').textContent = fmt(base.chTotal) + 'h';
+            if($('base-orcamento')) $('base-orcamento').textContent = brl(base.orcamentoTotal);
+
             const fMod = $('filter-modality')?.value || 'all', fSrc = norm($('filter-search')?.value || ''), fRsk = $('filter-risk')?.value || 'all';
-            const rows = getEnrichedRows().filter(r => (fMod==='all'||r.modalidade===fMod) && (!fSrc||norm(r.turma).includes(fSrc)) && (fRsk==='all'||(fRsk==='over'&&r.estourou)||(fRsk==='ok'&&!r.estourou))).sort((a,b) => b.horasTotaisPrevistas - a.horasTotaisPrevistas);
+            const rows = turmas.map(enrichRow).filter(r => (fMod==='all'||r.modalidade===fMod) && (!fSrc||norm(r.turma).includes(fSrc)) && (fRsk==='all'||(fRsk==='over'&&r.estourou)||(fRsk==='ok'&&!r.estourou))).sort((a,b) => b.horasTotaisPrevistas - a.horasTotaisPrevistas);
             
             const t = summarizeRows(rows);
             const trvTotal = travelRows.reduce((sum, r) => sum + (num(r.km)/10 * (r.veiculo==='Próprio'?1.25:1) * num(r.valorCombustivel||6)) + num(r.pedagio) + num(r.outros), 0);
@@ -708,68 +898,6 @@
             }
         }
 
-        // ---------------- MESCLAGEM EM NUVEM E EXCEL ----------------
-        function findCol(row, aliases) {
-            const keys = Object.keys(row), norms = keys.map(k => ({k, n: norm(k)}));
-            for(let a of aliases) { let ex = norms.find(i=>i.n===norm(a)); if(ex) return ex.k; }
-            for(let a of aliases) { let p = norms.find(i=>i.n.includes(norm(a))); if(p) return p.k; }
-            return null;
-        }
-
-        async function processFiles(files) {
-            if(!files.length || !userId) return;
-            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Processando arquivos e salvando na nuvem...', 'info');
-            
-            const uploadBatchMap = new Map();
-            let totalLidos = 0;
-
-            for(let file of files) {
-                const buffer = await file.arrayBuffer();
-                const wb = XLSX.read(buffer, {type: 'array'});
-                wb.SheetNames.forEach(sn => {
-                    XLSX.utils.sheet_to_json(wb.Sheets[sn], {defval:''}).forEach(row => {
-                        const isDesligado = norm(row[findCol(row, ['desligado', 'encerrado'])]||'') === 'sim';
-                        const status = norm(row[findCol(row, ['status', 'situacao'])]||'');
-                        if(isDesligado || status.includes('cancel')||status.includes('desist')||status.includes('inativ')) return;
-                        
-                        totalLidos++;
-                        const turma = String(row[findCol(row, ['turma'])]||'').trim() || 'Desconhecida';
-                        const isTec = Object.keys(row).some(k => norm(k).includes('4 visita')||norm(k).includes('5 visita')||norm(k).includes('6 visita'));
-                        const mod = isTec ? MODALIDADES.TEC : MODALIDADES.QUAL;
-                        const visits = Object.keys(row).filter(k => /^\d+ª?\s*visita/i.test(k)).filter(k => String(row[k]).trim()).length;
-                        const key = `${mod}::${turma}`;
-                        
-                        if(!uploadBatchMap.has(key)) uploadBatchMap.set(key, {id: uid(), turma, modalidade: mod, alunos: 0, visitasTotal: DEFAULT_VISITS[mod], visitasRealizadas: 0});
-                        const g = uploadBatchMap.get(key);
-                        g.alunos += 1;
-                        g.visitasRealizadas += visits;
-                    });
-                });
-            }
-
-            if(uploadBatchMap.size > 0) {
-                const existingMap = new Map(turmas.map(t => [`${t.modalidade}::${t.turma}`, t]));
-                const cloudPromises = [];
-
-                uploadBatchMap.forEach((batchRow, key) => {
-                    if (existingMap.has(key)) {
-                        batchRow.id = existingMap.get(key).id;
-                    }
-                    existingMap.set(key, batchRow);
-                    cloudPromises.push(saveTurmaToCloud(batchRow));
-                });
-
-                await Promise.all(cloudPromises);
-                turmas = [...existingMap.values()];
-                
-                setStatus(`<i class="fa-solid fa-cloud-arrow-up"></i> Sucesso! <b>${totalLidos} alunos</b> consolidados nas planilhas e salvos na Nuvem.`, 'ok');
-                renderAll();
-            } else {
-                setStatus('Erro: Nenhum aluno ativo encontrado nas planilhas submetidas.', 'error');
-            }
-        }
-
-        // ---------------- TABELAS E RENDER ----------------
         function renderEditableTable() {
             const tbody = $('editable-table');
             if(tbody) tbody.innerHTML = turmas.map(r => `<tr data-id="${r.id}">
@@ -801,112 +929,12 @@
 
         function renderAll() { renderDashboard(); renderEditableTable(); renderTravel(); }
 
-        // ---------------- LISTENERS DE EVENTOS ----------------
-        // Inicialização Principal sem depender de um único DOMContentLoaded wrapper
-        function initApp() {
-            initAuth();
+        // --- INICIALIZAÇÃO SEGURA ---
+        // Aqui garantimos que a interface (Botões) é liberada imediatamente, 
+        // ANTES de a nuvem sequer tentar iniciar.
+        bindUIEvents();
+        initFirebaseSafe();
 
-            const dropZone = $('drop-zone');
-            if(dropZone) {
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
-                    dropZone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }, false);
-                    document.body.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }, false);
-                });
-                ['dragenter', 'dragover'].forEach(evt => dropZone.addEventListener(evt, () => dropZone.classList.add('dragover'), false));
-                ['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, () => dropZone.classList.remove('dragover'), false));
-                dropZone.addEventListener('drop', e => processFiles(e.dataTransfer.files), false);
-            }
-            
-            $('btn-select-files')?.addEventListener('click', () => $('file-input').click());
-            $('file-input')?.addEventListener('change', e => processFiles(e.target.files));
-
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-                btn.classList.add('active');
-                $('tab-' + btn.dataset.tab).classList.add('active');
-            }));
-
-            $('apply-config')?.addEventListener('click', () => {
-                config.valorHora = num($('cfg-valor-hora').value);
-                config.horasPorVisita = num($('cfg-horas-visita').value);
-                config.tetoHoras = num($('cfg-teto').value);
-                saveConfigToCloud(); renderAll();
-            });
-
-            $('clear-data')?.addEventListener('click', clearAllCloudData);
-            $('btn-print')?.addEventListener('click', () => {
-                $('print-date').innerText = `Emitido em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`;
-                window.print();
-            });
-
-            ['filter-modality', 'filter-risk'].forEach(id => $(id)?.addEventListener('change', renderDashboard));
-            $('filter-search')?.addEventListener('input', renderDashboard);
-            
-            $('add-row')?.addEventListener('click', () => {
-                const nova = {id: uid(), turma: 'Nova Turma', modalidade: MODALIDADES.QUAL, alunos: 1, visitasTotal: 3, visitasRealizadas: 0};
-                turmas.push(nova);
-                saveTurmaToCloud(nova); 
-                renderAll();
-            });
-
-            $('editable-table')?.addEventListener('change', e => {
-                const tr = e.target.closest('tr');
-                if(!tr || !e.target.dataset.field) return;
-                const idx = turmas.findIndex(t => t.id === tr.dataset.id);
-                if(idx > -1) {
-                    turmas[idx][e.target.dataset.field] = e.target.type==='number' ? num(e.target.value) : e.target.value;
-                    saveTurmaToCloud(turmas[idx]); 
-                    renderAll();
-                }
-            });
-
-            $('editable-table')?.addEventListener('click', e => {
-                const btn = e.target.closest('button[data-action="delete"]');
-                if(btn) { 
-                    const idDel = btn.closest('tr').dataset.id;
-                    turmas = turmas.filter(t => t.id !== idDel); 
-                    deleteTurmaFromCloud(idDel);
-                    renderAll(); 
-                }
-            });
-
-            $('add-travel')?.addEventListener('click', () => {
-                const novaV = {
-                    id: uid(),
-                    data: new Date().toISOString().split('T')[0],
-                    turma: $('travel-class')?.value || '',
-                    destino: $('travel-destination')?.value || '',
-                    veiculo: $('travel-vehicle')?.value || 'Senac',
-                    combustivel: 'Gasolina',
-                    km: num($('travel-km')?.value),
-                    valorCombustivel: 6,
-                    pedagio: num($('travel-other')?.value),
-                    outros: 0
-                };
-                travelRows.push(novaV);
-                saveTravelToCloud(novaV);
-                renderAll();
-                alert("Lançado e salvo na nuvem com sucesso!");
-            });
-
-            $('travel-table')?.addEventListener('click', e => {
-                const btn = e.target.closest('button[data-action="delete"]');
-                if(btn) { 
-                    const idDel = btn.closest('tr').dataset.id;
-                    travelRows = travelRows.filter(t => t.id !== idDel); 
-                    deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', idDel));
-                    renderAll(); 
-                }
-            });
-        }
-
-        // Executa a inicialização de forma segura e direta
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
-        }
     </script>
 </body>
 </html>
