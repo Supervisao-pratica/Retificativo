@@ -177,7 +177,7 @@
                     <p class="font-bold text-slate-700 text-lg">Arraste as planilhas para cá</p>
                     <p class="text-sm text-slate-500 mt-1 mb-4">ou clique para selecionar do seu computador</p>
                     <input id="file-input" type="file" accept=".xlsx,.xls,.csv" multiple class="hidden">
-                    <button id="btn-select-files" class="btn btn-outline">
+                    <button id="btn-select-files" type="button" class="btn btn-outline">
                         Selecionar Arquivos
                     </button>
                 </div>
@@ -535,7 +535,6 @@
         async function loadDataFromCloud() {
             setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Carregando execução salva na nuvem...', 'info');
             try {
-                // Carrega Config
                 const configSnap = await getDocs(collection(db, 'artifacts', appId, 'users', userId, 'config'));
                 if (!configSnap.empty) {
                     config = { ...config, ...configSnap.docs[0].data() };
@@ -544,11 +543,9 @@
                     if($('cfg-teto')) $('cfg-teto').value = config.tetoHoras;
                 }
 
-                // Carrega Turmas
                 const tSnap = await getDocs(getTurmasRef());
                 turmas = tSnap.docs.map(d => d.data());
 
-                // Carrega Deslocamentos
                 const trSnap = await getDocs(getTravelRef());
                 travelRows = trSnap.docs.map(d => d.data());
 
@@ -755,7 +752,6 @@
                 const cloudPromises = [];
 
                 uploadBatchMap.forEach((batchRow, key) => {
-                    // Verifica se a turma já existe na base executada. Se sim, preserva o ID para atualizar o DOC no banco
                     if (existingMap.has(key)) {
                         batchRow.id = existingMap.get(key).id;
                     }
@@ -806,10 +802,10 @@
         function renderAll() { renderDashboard(); renderEditableTable(); renderTravel(); }
 
         // ---------------- LISTENERS DE EVENTOS ----------------
-        document.addEventListener('DOMContentLoaded', () => {
+        // Inicialização Principal sem depender de um único DOMContentLoaded wrapper
+        function initApp() {
             initAuth();
 
-            // Drag and drop setup
             const dropZone = $('drop-zone');
             if(dropZone) {
                 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
@@ -820,10 +816,10 @@
                 ['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, () => dropZone.classList.remove('dragover'), false));
                 dropZone.addEventListener('drop', e => processFiles(e.dataTransfer.files), false);
             }
+            
             $('btn-select-files')?.addEventListener('click', () => $('file-input').click());
             $('file-input')?.addEventListener('change', e => processFiles(e.target.files));
 
-            // Tabs UI
             document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -847,7 +843,6 @@
             ['filter-modality', 'filter-risk'].forEach(id => $(id)?.addEventListener('change', renderDashboard));
             $('filter-search')?.addEventListener('input', renderDashboard);
             
-            // Tabela Editável (Mutations)
             $('add-row')?.addEventListener('click', () => {
                 const nova = {id: uid(), turma: 'Nova Turma', modalidade: MODALIDADES.QUAL, alunos: 1, visitasTotal: 3, visitasRealizadas: 0};
                 turmas.push(nova);
@@ -876,7 +871,6 @@
                 }
             });
 
-            // Viagens Cloud (Mutations)
             $('add-travel')?.addEventListener('click', () => {
                 const novaV = {
                     id: uid(),
@@ -905,7 +899,14 @@
                     renderAll(); 
                 }
             });
-        });
+        }
+
+        // Executa a inicialização de forma segura e direta
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
