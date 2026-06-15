@@ -18,12 +18,12 @@
             --muted: #64748b;
             --line: #dbe3ee;
             --panel: #ffffff;
-            --page: #f6f8fb;
+            --page: #f4f7fb;
         }
 
         * { box-sizing: border-box; }
         body {
-            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: Inter, system-ui, -apple-system, sans-serif;
             background: var(--page);
             color: var(--ink);
         }
@@ -32,451 +32,386 @@
         .senac-orange { background-color: var(--senac-orange); }
         .senac-blue-text { color: var(--senac-blue); }
         .senac-orange-text { color: var(--senac-orange); }
+        
         .panel {
             background: var(--panel);
             border: 1px solid var(--line);
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+            transition: all 0.2s ease;
         }
+
+        /* Drag and Drop Zone */
+        .drop-zone {
+            border: 2px dashed #94a3b8;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            background: #f0f6ff;
+            border-color: var(--senac-blue);
+        }
+        .drop-zone i { font-size: 36px; color: #64748b; margin-bottom: 12px; transition: color 0.2s; }
+        .drop-zone:hover i, .drop-zone.dragover i { color: var(--senac-blue); }
 
         .tab-btn {
             border-bottom: 3px solid transparent;
             color: #526176;
-            transition: color .18s ease, border-color .18s ease;
+            transition: all .2s ease;
+            padding: 14px 4px;
+            margin-right: 24px;
         }
+        .tab-btn:hover { color: var(--senac-blue); }
         .tab-btn.active {
             border-color: var(--senac-orange);
             color: var(--senac-blue);
             font-weight: 800;
         }
-        .tab-panel { display: none; }
+        .tab-panel { display: none; animation: fadeIn 0.3s ease; }
         .tab-panel.active { display: block; }
 
-        .field-label {
-            display: block;
-            font-size: 11px;
-            line-height: 1.2;
-            font-weight: 800;
-            color: #56657a;
-            letter-spacing: .02em;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .input {
-            width: 100%;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            background: #fff;
-            padding: 9px 10px;
-            font-size: 14px;
-            color: #1f2937;
-            outline: none;
-        }
-        .input:focus {
-            border-color: var(--senac-orange);
-            box-shadow: 0 0 0 3px rgba(243, 112, 33, .15);
-        }
-        .input-sm {
-            min-width: 72px;
-            border: 1px solid #cbd5e1;
-            border-radius: 5px;
-            padding: 6px 8px;
-            font-size: 13px;
-            outline: none;
-        }
-        .input-sm:focus {
-            border-color: var(--senac-orange);
-            box-shadow: 0 0 0 2px rgba(243, 112, 33, .12);
-        }
+        .field-label { display: block; font-size: 11px; font-weight: 800; color: #56657a; text-transform: uppercase; margin-bottom: 6px; }
+        .input { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none; transition: border 0.2s; }
+        .input:focus { border-color: var(--senac-orange); box-shadow: 0 0 0 3px rgba(243, 112, 33, .15); }
+        .input-sm { min-width: 72px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 13px; outline: none; }
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            border-radius: 6px;
-            font-weight: 800;
-            font-size: 14px;
-            padding: 10px 14px;
-            transition: transform .12s ease, background .12s ease, border-color .12s ease;
-        }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; font-weight: 800; font-size: 14px; padding: 10px 16px; transition: all .2s ease; cursor: pointer; border: none; }
         .btn:active { transform: translateY(1px); }
         .btn-primary { background: var(--senac-blue); color: #fff; }
-        .btn-primary:hover { background: #003868; }
+        .btn-primary:hover { background: #003868; box-shadow: 0 4px 12px rgba(0,69,135,0.2); }
         .btn-orange { background: var(--senac-orange); color: #fff; }
-        .btn-orange:hover { background: #d95f17; }
-        .btn-outline {
-            background: #fff;
-            color: var(--senac-blue);
-            border: 1px solid #b8c6d8;
-        }
-        .btn-outline:hover { border-color: var(--senac-blue); background: #f8fbff; }
-        .btn-danger {
-            background: #fff1f2;
-            color: #be123c;
-            border: 1px solid #fecdd3;
-        }
+        .btn-orange:hover { background: #d95f17; box-shadow: 0 4px 12px rgba(243,112,33,0.2); }
+        .btn-outline { background: #fff; color: var(--senac-blue); border: 1px solid #b8c6d8; }
+        .btn-outline:hover { border-color: var(--senac-blue); background: #f0f6ff; }
+        .btn-danger { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
         .btn-danger:hover { background: #ffe4e6; }
 
-        .kpi-card {
-            border: 1px solid var(--line);
-            background: #fff;
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .kpi-card .icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .kpi-value {
-            font-size: clamp(18px, 2vw, 22px);
-            line-height: 1.2;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            margin-top: 8px;
-        }
-        .kpi-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            color: #334155;
-            font-weight: 900;
-        }
-        .kpi-desc {
-            font-size: 11px;
-            color: #64748b;
-            line-height: 1.3;
-            margin-top: 2px;
-            font-weight: 500;
-        }
+        .kpi-card { position: relative; overflow: hidden; }
+        .kpi-card .icon { width: 42px; height: 42px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; }
+        .kpi-value { font-size: clamp(20px, 2.5vw, 26px); font-weight: 900; letter-spacing: -0.03em; margin-top: 12px; }
+        .kpi-label { font-size: 12px; text-transform: uppercase; color: #334155; font-weight: 900; }
+        .kpi-desc { font-size: 11px; color: #64748b; line-height: 1.4; margin-top: 4px; font-weight: 500; }
+        
+        /* Progress Bar for KPIs */
+        .progress-bg { width: 100%; height: 4px; background: #e2e8f0; border-radius: 2px; margin-top: 12px; overflow: hidden; }
+        .progress-bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
 
-        .table-wrap {
-            overflow: auto;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: #fff;
-        }
+        .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
         table { border-collapse: separate; border-spacing: 0; width: 100%; }
-        th {
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            background: #f1f5f9;
-            color: #475569;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            font-weight: 900;
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--line);
-            white-space: nowrap;
-        }
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 13px;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
+        th { position: sticky; top: 0; z-index: 2; background: #f8fafc; color: #475569; font-size: 11px; text-transform: uppercase; font-weight: 900; padding: 14px 12px; border-bottom: 1px solid var(--line); }
+        td { padding: 12px; border-bottom: 1px solid #edf2f7; font-size: 13px; font-weight: 500; }
         tr:hover td { background: #f8fafc; }
         .row-alert td { background: #fff1f2; }
         .row-alert:hover td { background: #ffe4e6; }
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border-radius: 999px;
-            padding: 4px 9px;
-            font-size: 12px;
-            font-weight: 800;
-        }
-        .pill-blue { background: #e6f1fb; color: #004587; }
-        .pill-orange { background: #fff0e6; color: #b45309; }
-        .pill-green { background: #dcfce7; color: #166534; }
-        .pill-red { background: #fee2e2; color: #991b1b; }
-        .pill-gray { background: #f1f5f9; color: #475569; }
-
-        .chart-box { height: 320px; position: relative; }
-        .note {
-            border-left: 4px solid var(--senac-orange);
-            background: #fff7ed;
-            color: #7c2d12;
-            border-radius: 8px;
-            padding: 12px 14px;
-            font-size: 13px;
-        }
-        .status-text {
-            min-height: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            color: #475569;
-        }
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #bac7d5; border-radius: 999px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        .help-icon {
-            color: #94a3b8;
-            cursor: help;
-            margin-left: 4px;
-            font-size: 11px;
+        .pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 800; }
+        .pill-blue { background: #eff6ff; color: #1d4ed8; }
+        .pill-orange { background: #fff7ed; color: #c2410c; }
+        .pill-green { background: #f0fdf4; color: #15803d; }
+        .pill-red { background: #fef2f2; color: #b91c1c; }
+        .pill-gray { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0;}
+
+        .chart-box { height: 280px; position: relative; margin-top: 16px; }
+        
+        /* Print Styles for Executive Report */
+        @media print {
+            body { background: #fff; color: #000; font-family: Arial, sans-serif; }
+            .no-print, nav, .tab-btn, .drop-zone, button { display: none !important; }
+            .panel { border: none; box-shadow: none; padding: 0 !important; margin-bottom: 20px; page-break-inside: avoid; }
+            .kpi-card { border: 1px solid #ddd; break-inside: avoid; }
+            .chart-box { height: 250px !important; }
+            main { padding: 0 !important; max-width: 100% !important; }
+            .table-wrap { max-height: none !important; overflow: visible !important; border: none; }
+            td, th { border-bottom: 1px solid #ddd; padding: 8px; font-size: 10px; }
+            .progress-bg { display: none; }
+            @page { size: landscape; margin: 1cm; }
         }
     </style>
 </head>
 <body>
-    <nav class="senac-blue text-white px-4 py-4 shadow-md">
+    <nav class="senac-blue text-white px-4 py-3 shadow-md no-print">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-3 min-w-0">
-                <div class="bg-white senac-blue-text w-11 h-11 rounded-md flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                <div class="bg-white senac-blue-text w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
                 </div>
                 <div class="min-w-0">
-                    <h1 class="text-xl font-black tracking-wide truncate">Portal da Supervisão</h1>
-                    <p class="text-xs text-blue-100 font-semibold truncate">Controle orçamentário de visitas e execução</p>
+                    <h1 class="text-lg font-black tracking-wide truncate">Portal da Supervisão</h1>
+                    <p class="text-[11px] text-blue-100 font-semibold truncate uppercase tracking-wider">Gestão Orçamentária Executiva</p>
                 </div>
             </div>
-            <div class="hidden sm:flex items-center gap-3">
+            <div class="hidden sm:flex items-center gap-4">
                 <div class="text-right">
                     <p class="text-sm font-bold">Senac Portão - PR</p>
-                    <p class="text-xs text-blue-100">Orçamento, execução e simulação</p>
+                    <p class="text-xs text-blue-100 flex items-center justify-end gap-1"><i class="fa-solid fa-circle text-[8px] text-green-400"></i> Sistema Online</p>
                 </div>
-                <div class="h-10 w-10 bg-white senac-blue-text rounded-full flex items-center justify-center font-black border-2 border-orange-400">
-                    MV
-                </div>
+                <button id="clear-data" class="btn btn-danger py-2 px-3 text-xs" title="Apaga todas as planilhas carregadas e recomeça a execução do zero">
+                    <i class="fa-solid fa-trash-arrow-up"></i> Zerar Execução
+                </button>
             </div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        <section class="grid grid-cols-1 xl:grid-cols-3 gap-5">
-            <div class="panel p-5 xl:col-span-2">
-                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
+        <!-- Configuration & Upload Area (Hidden in Print) -->
+        <section class="grid grid-cols-1 xl:grid-cols-3 gap-5 no-print">
+            <div class="panel p-6 xl:col-span-2">
+                <div class="flex justify-between items-start mb-4">
                     <div>
                         <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-file-excel senac-blue-text"></i>
-                            Fonte de dados
+                            <i class="fa-solid fa-cloud-arrow-up senac-blue-text"></i>
+                            Soma Contínua de Relatórios (Execução)
                         </h2>
                         <p class="text-sm text-slate-500 mt-1">
-                            Faça o upload dos relatórios CSV/Excel. O sistema detectará automaticamente se é <b>Qualificação (3 visitas)</b> ou <b>Técnica (6 visitas)</b> pelas colunas do arquivo.
+                            Arraste os arquivos Excel das turmas aqui. Conforme você sobe planilhas de Qualificação e Técnica, o sistema <b>soma</b> tudo à execução geral.
                         </p>
                     </div>
-                    <span class="pill pill-blue w-fit" id="status-base-pill" title="A base média de 1.370 alunos é usada como referência inicial de verba.">
-                        <i class="fa-solid fa-database"></i>
-                        Base Média de Previsão
-                    </span>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
-                    <div class="lg:col-span-8">
-                        <label class="field-label" for="file-input">Upload de Planilhas (Qualificação e/ou Técnica)</label>
-                        <input id="file-input" type="file" accept=".xlsx,.xls,.csv" multiple class="input file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-800">
-                    </div>
-                    <div class="lg:col-span-2">
-                        <button id="import-files" class="btn btn-primary w-full">
-                            <i class="fa-solid fa-cloud-arrow-up"></i>
-                            Ler Arquivos
-                        </button>
-                    </div>
-                    <div class="lg:col-span-2">
-                        <button id="reset-default" class="btn btn-outline w-full" title="Restaurar simulação de 1.370 alunos">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            Previsão Anual
-                        </button>
-                    </div>
+                <div id="drop-zone" class="drop-zone">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <p class="font-bold text-slate-700 text-lg">Arraste as planilhas para cá</p>
+                    <p class="text-sm text-slate-500 mt-1 mb-4">ou clique para selecionar do seu computador</p>
+                    <input id="file-input" type="file" accept=".xlsx,.xls,.csv" multiple class="hidden">
+                    <button class="btn btn-outline" onclick="document.getElementById('file-input').click()">
+                        Selecionar Arquivos
+                    </button>
                 </div>
-                <p id="import-status" class="status-text mt-3 text-slate-500">Iniciado com a previsão média anual (1.370 alunos no total).</p>
+                <div id="import-status" class="mt-3 text-sm font-semibold text-center text-slate-500">
+                    Nenhuma planilha de execução carregada nesta sessão.
+                </div>
             </div>
 
-            <div class="panel p-5">
+            <div class="panel p-6">
                 <h2 class="text-lg font-black text-slate-800 flex items-center gap-2 mb-4">
                     <i class="fa-solid fa-sliders senac-orange-text"></i>
-                    Parâmetros Base
+                    Parâmetros Financeiros
                 </h2>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="field-label" for="cfg-valor-hora">Valor hora (R$)</label>
-                        <input id="cfg-valor-hora" type="number" step="0.01" min="0" class="input" value="3.75">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="field-label">Valor hora (R$)</label>
+                            <input id="cfg-valor-hora" type="number" step="0.01" min="0" class="input font-bold text-senac-blue" value="3.75">
+                        </div>
+                        <div>
+                            <label class="field-label">Horas / visita</label>
+                            <input id="cfg-horas-visita" type="number" step="0.1" min="0" class="input font-bold" value="0.5">
+                        </div>
                     </div>
                     <div>
-                        <label class="field-label" for="cfg-horas-visita">Horas por visita</label>
-                        <input id="cfg-horas-visita" type="number" step="0.1" min="0" class="input" value="0.5">
+                        <label class="field-label">Teto horas / turma</label>
+                        <input id="cfg-teto" type="number" step="1" min="1" class="input font-bold" value="100">
                     </div>
-                    <div>
-                        <label class="field-label" for="cfg-teto">Teto turma (h)</label>
-                        <input id="cfg-teto" type="number" step="1" min="1" class="input" value="100">
-                    </div>
-                    <div class="flex items-end">
-                        <button id="apply-config" class="btn btn-orange w-full">
-                            <i class="fa-solid fa-calculator"></i>
-                            Recalcular
-                        </button>
-                    </div>
+                    <button id="apply-config" class="btn btn-orange w-full mt-2">
+                        <i class="fa-solid fa-calculator"></i>
+                        Recalcular Tudo
+                    </button>
                 </div>
-                <p class="text-xs text-slate-500 mt-3">
-                    Esses valores multiplicam as horas gerando o orçamento em Reais (R$).
-                </p>
             </div>
         </section>
 
-        <section class="flex gap-7 overflow-x-auto border-b border-slate-200 px-1">
-            <button class="tab-btn active py-3 text-base shrink-0" data-tab="dashboard">
-                <i class="fa-solid fa-chart-line mr-2"></i>Painel da Execução
+        <!-- Navigation Tabs -->
+        <section class="flex gap-2 overflow-x-auto border-b-2 border-slate-200 px-1 no-print">
+            <button class="tab-btn active text-sm" data-tab="dashboard">
+                <i class="fa-solid fa-chart-pie mr-2"></i>Painel Executivo
             </button>
-            <button class="tab-btn py-3 text-base shrink-0" data-tab="base">
-                <i class="fa-solid fa-table mr-2"></i>Edição Manual
+            <button class="tab-btn text-sm" data-tab="base">
+                <i class="fa-solid fa-table-list mr-2"></i>Ajuste Manual
             </button>
-            <button class="tab-btn py-3 text-base shrink-0" data-tab="simulator">
+            <button class="tab-btn text-sm" data-tab="simulator">
                 <i class="fa-solid fa-flask mr-2"></i>Simulador de Cenários
             </button>
-            <button class="tab-btn py-3 text-base shrink-0" data-tab="travel">
-                <i class="fa-solid fa-route mr-2"></i>Deslocamentos Diários
+            <button class="tab-btn text-sm" data-tab="travel">
+                <i class="fa-solid fa-car mr-2"></i>Deslocamentos
             </button>
         </section>
 
+        <!-- DASHBOARD EXECUTIVO -->
         <section id="tab-dashboard" class="tab-panel active space-y-6">
-            <div class="panel p-5">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-                    <div>
-                        <label class="field-label" for="filter-modality">Filtrar modalidade</label>
+            
+            <!-- Filters & Print Button -->
+            <div class="flex flex-col md:flex-row gap-4 items-end justify-between no-print mb-2">
+                <div class="flex gap-3 flex-1 w-full md:w-auto">
+                    <div class="w-1/3">
+                        <label class="field-label">Modalidade</label>
                         <select id="filter-modality" class="input">
-                            <option value="all">Todas</option>
-                            <option value="Qualificação">Qualificação</option>
-                            <option value="Técnica">Técnica</option>
+                            <option value="all">Todas as Modalidades</option>
+                            <option value="Qualificação">Apenas Qualificação</option>
+                            <option value="Técnica">Apenas Técnica</option>
                         </select>
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="field-label" for="filter-search">Buscar turma</label>
-                        <input id="filter-search" class="input" placeholder="Digite o código/nome da turma">
+                    <div class="w-2/3">
+                        <label class="field-label">Buscar Turma</label>
+                        <input id="filter-search" class="input" placeholder="Digite código da turma...">
                     </div>
-                    <div>
-                        <label class="field-label" for="filter-risk">Status do Teto (100h)</label>
-                        <select id="filter-risk" class="input">
-                            <option value="all">Todas as turmas</option>
-                            <option value="over">Somente acima do teto</option>
-                            <option value="ok">Somente dentro do teto</option>
-                        </select>
+                </div>
+                <button id="btn-print" class="btn btn-primary whitespace-nowrap">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Gerar Relatório PDF
+                </button>
+            </div>
+
+            <!-- Header Print Only -->
+            <div class="hidden print:block mb-6 border-b-2 border-senac-blue pb-4">
+                <h1 class="text-2xl font-black text-senac-blue">Relatório Executivo de Execução Orçamentária</h1>
+                <p class="text-sm text-slate-600 mt-1" id="print-date"></p>
+            </div>
+
+            <!-- BLOCO FIXO: BASE DE CONSULTA (PREVISÃO ANUAL) -->
+            <div class="panel p-6 bg-gradient-to-r from-[#004587] to-[#002a52] text-white shadow-lg relative overflow-hidden">
+                <!-- Icon background element -->
+                <i class="fa-solid fa-bullseye absolute -right-6 -top-10 text-9xl text-white opacity-5"></i>
+                
+                <h2 class="text-xl font-black mb-5 flex items-center gap-3">
+                    <i class="fa-solid fa-thumbtack text-orange-400"></i>
+                    Base de Consulta Geral (Previsão Anual)
+                    <span class="text-xs font-normal text-blue-200 bg-[#001d3a] px-3 py-1 rounded-full ml-2 border border-[#004587]">Metas Fixadas</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
+                    <div class="border-l-4 border-orange-400 pl-4">
+                        <p class="text-blue-200 text-xs font-bold uppercase tracking-wider mb-1">Total de Alunos Base</p>
+                        <p class="text-3xl font-black">1.370</p>
+                        <p class="text-xs text-blue-200 mt-1">870 Qual + 500 Téc</p>
+                    </div>
+                    <div class="border-l-4 border-orange-400 pl-4">
+                        <p class="text-blue-200 text-xs font-bold uppercase tracking-wider mb-1">Teto Visitas Anuais</p>
+                        <p class="text-3xl font-black" id="base-visitas">5.610</p>
+                        <p class="text-xs text-blue-200 mt-1">Estimativa máxima</p>
+                    </div>
+                    <div class="border-l-4 border-orange-400 pl-4">
+                        <p class="text-blue-200 text-xs font-bold uppercase tracking-wider mb-1">C.H. Total Projetada</p>
+                        <p class="text-3xl font-black" id="base-ch">2.805h</p>
+                        <p class="text-xs text-blue-200 mt-1">Volume de horas limite</p>
+                    </div>
+                    <div class="border-l-4 border-orange-400 pl-4">
+                        <p class="text-blue-200 text-xs font-bold uppercase tracking-wider mb-1">Orçamento Total Projetado</p>
+                        <p class="text-3xl font-black text-orange-400" id="base-orcamento">R$ 10.518,75</p>
+                        <p class="text-xs text-blue-200 mt-1">100% da Verba Disponível</p>
                     </div>
                 </div>
             </div>
 
+            <!-- BLOCO DINÂMICO: EXECUÇÃO REAL (LIDA PELAS PLANILHAS) -->
+            <div class="flex items-center gap-3 mb-2 mt-8">
+                <i class="fa-solid fa-chart-line text-xl text-senac-blue"></i>
+                <h3 class="text-xl font-black text-slate-800">Uso Real e Saldo (Planilhas Lidas)</h3>
+            </div>
+            
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                <div class="kpi-card">
+                <div class="panel p-5 kpi-card border-t-4 border-t-senac-blue">
                     <div>
-                        <span class="icon bg-blue-50 senac-blue-text"><i class="fa-solid fa-users"></i></span>
-                        <p class="kpi-label mt-3">Alunos Ativos vs. Meta</p>
-                        <p class="kpi-desc">Volume atual cruzado com a meta anual do início do ano (870 + 500).</p>
+                        <div class="flex justify-between items-start">
+                            <p class="kpi-label mt-1 text-senac-blue">Alunos Executados</p>
+                        </div>
+                        <p class="kpi-desc">Alunos ativos encontrados nas planilhas importadas.</p>
                     </div>
-                    <p id="kpi-alunos" class="kpi-value">0 / 1.370</p>
-                </div>
-                <div class="kpi-card">
                     <div>
-                        <span class="icon bg-indigo-50 text-indigo-700"><i class="fa-solid fa-person-walking-arrow-right"></i></span>
-                        <p class="kpi-label mt-3">Visitas Realizadas</p>
-                        <p class="kpi-desc">Total de visitas com data lançada em relação às visitas previstas para os alunos ativos.</p>
+                        <p id="kpi-alunos" class="kpi-value text-slate-800">0</p>
+                        <div class="progress-bg"><div id="prog-alunos" class="progress-bar bg-senac-blue" style="width: 0%"></div></div>
+                        <p class="text-xs text-slate-400 mt-2 font-bold flex justify-between">
+                            <span>Progresso vs Base:</span>
+                            <span id="kpi-alunos-pct">0%</span>
+                        </p>
                     </div>
-                    <p id="kpi-visitas-total" class="kpi-value">0 / 0</p>
-                </div>
-                <div class="kpi-card">
-                    <div>
-                        <span class="icon bg-emerald-50 text-emerald-700"><i class="fa-solid fa-clock"></i></span>
-                        <p class="kpi-label mt-3">Carga Horária (C.H.)</p>
-                        <p class="kpi-desc">Horas consumidas nas visitas feitas vs. Horas totais projetadas.</p>
-                    </div>
-                    <p id="kpi-horas-total" class="kpi-value">0h / 0h</p>
-                </div>
-                <div class="kpi-card">
-                    <div>
-                        <span class="icon bg-orange-50 senac-orange-text"><i class="fa-solid fa-sack-dollar"></i></span>
-                        <p class="kpi-label mt-3">Orçamento Gasto</p>
-                        <p class="kpi-desc">Custo já convertido a partir das visitas que possuem data preenchida.</p>
-                    </div>
-                    <p id="kpi-custo-total" class="kpi-value">R$ 0,00</p>
                 </div>
                 
-                <div class="kpi-card">
+                <div class="panel p-5 kpi-card border-t-4 border-t-emerald-500">
                     <div>
-                        <span class="icon bg-slate-100 text-slate-700"><i class="fa-solid fa-hourglass-half"></i></span>
-                        <p class="kpi-label mt-3">Saldo C.H. Restante</p>
-                        <p class="kpi-desc">Carga horária que ainda pode ser consumida este ano.</p>
+                        <p class="kpi-label mt-1 text-emerald-700">C.H. Consumida</p>
+                        <p class="kpi-desc">Horas consumidas com as datas de visitas já realizadas.</p>
                     </div>
-                    <p id="kpi-horas-restante" class="kpi-value">0h</p>
+                    <div>
+                        <p id="kpi-horas-total" class="kpi-value text-emerald-700">0h</p>
+                        <div class="progress-bg"><div id="prog-horas" class="progress-bar bg-emerald-500" style="width: 0%"></div></div>
+                        <p class="text-xs text-slate-400 mt-2 font-bold flex justify-between">
+                            <span>Uso da C.H. Projetada:</span>
+                            <span id="kpi-horas-pct">0%</span>
+                        </p>
+                    </div>
                 </div>
-                <div class="kpi-card">
+
+                <div class="panel p-5 kpi-card border-t-4 border-t-senac-orange">
                     <div>
-                        <span class="icon bg-amber-50 text-amber-700"><i class="fa-solid fa-piggy-bank"></i></span>
-                        <p class="kpi-label mt-3">Orçamento Restante</p>
-                        <p class="kpi-desc">Fatia do orçamento em Reais ainda disponível para uso.</p>
+                        <p class="kpi-label mt-1 text-senac-orange">Orçamento Consumido</p>
+                        <p class="kpi-desc">Valor em R$ gasto com as visitas executadas + deslocamentos.</p>
                     </div>
-                    <p id="kpi-custo-restante" class="kpi-value">R$ 0,00</p>
+                    <div>
+                        <p id="kpi-custo-total" class="kpi-value text-senac-orange">R$ 0,00</p>
+                        <div class="progress-bg"><div id="prog-orcamento" class="progress-bar bg-senac-orange" style="width: 0%"></div></div>
+                        <p class="text-xs text-slate-400 mt-2 font-bold flex justify-between">
+                            <span>Consumo da Verba Base:</span>
+                            <span id="kpi-orcamento-pct">0%</span>
+                        </p>
+                    </div>
                 </div>
-                <div class="kpi-card">
+
+                <div class="panel p-5 kpi-card bg-slate-50 border-t-4 border-t-slate-700">
                     <div>
-                        <span class="icon bg-cyan-50 text-cyan-700"><i class="fa-solid fa-car"></i></span>
-                        <p class="kpi-label mt-3">Deslocamento (Extra)</p>
-                        <p class="kpi-desc">Total gasto com transporte, combustível e pedágios (Lançamentos manuais).</p>
+                        <div class="flex justify-between items-start">
+                            <p class="kpi-label mt-1 text-slate-700">Saldo Global Restante</p>
+                            <i class="fa-solid fa-piggy-bank text-slate-300 text-2xl"></i>
+                        </div>
+                        <p class="kpi-desc">Orçamento Projetado (Base) subtraindo tudo o que já foi gasto.</p>
                     </div>
-                    <p id="kpi-deslocamento" class="kpi-value">R$ 0,00</p>
-                </div>
-                <div class="kpi-card">
-                    <div>
-                        <span class="icon bg-red-50 text-red-700"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                        <p class="kpi-label mt-3">Turmas Acima do Teto</p>
-                        <p class="kpi-desc">Turmas cuja projeção de horas ultrapassa o teto definido (100h).</p>
+                    <div class="mt-4">
+                        <p id="kpi-saldo-global" class="text-2xl font-black text-slate-800">R$ 10.518,75</p>
+                        <p class="text-xs text-slate-500 mt-2 font-bold">Verba ainda segura para uso.</p>
                     </div>
-                    <p id="kpi-estouradas" class="kpi-value">0</p>
                 </div>
             </div>
 
+            <!-- Charts -->
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
                 <div class="panel p-5 xl:col-span-2">
-                    <h2 class="text-lg font-black mb-1 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-column senac-blue-text"></i>
-                        C.H. Utilizada vs C.H. Restante por Turma
-                    </h2>
-                    <p class="text-xs text-slate-500 mb-4">Acompanhamento de consumo para não estourar a linha de limite de 100h por turma.</p>
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="text-base font-black flex items-center gap-2 text-slate-800">
+                            <i class="fa-solid fa-chart-column text-senac-blue"></i>
+                            Controle de Teto por Turma Lida (C.H.)
+                        </h2>
+                        <span id="kpi-estouradas" class="pill pill-gray text-xs">0 Turmas Acima do Teto</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Garante visualmente que nenhuma turma ultrapasse 100h.</p>
                     <div class="chart-box">
                         <canvas id="chart-hours"></canvas>
                     </div>
                 </div>
                 <div class="panel p-5">
-                    <h2 class="text-lg font-black mb-1 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie senac-orange-text"></i>
-                        Orçamento Geral
+                    <h2 class="text-base font-black mb-1 flex items-center gap-2 text-slate-800">
+                        <i class="fa-solid fa-chart-pie text-senac-orange"></i>
+                        Orçamento por Fatores
                     </h2>
-                    <p class="text-xs text-slate-500 mb-4">Divisão da verba: O que foi usado, o que sobrou e o peso dos deslocamentos.</p>
+                    <p class="text-xs text-slate-500 mb-4">Fatia executada de cada componente da operação.</p>
                     <div class="chart-box">
-                        <canvas id="chart-costs"></canvas>
+                        <canvas id="chart-modality"></canvas>
                     </div>
                 </div>
             </div>
 
+            <!-- Table -->
             <div class="panel p-5">
-                <h2 class="text-lg font-black mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-list-check senac-blue-text"></i>
-                    Relatório de Controle da Execução
+                <h2 class="text-base font-black mb-2 flex items-center gap-2 text-slate-800">
+                    <i class="fa-solid fa-table-list text-senac-blue"></i>
+                    Turmas em Execução (Agregadas pelas Planilhas)
                 </h2>
-                <p class="text-xs text-slate-500 mb-4">Listagem detalhada das turmas lidas pelas planilhas, informando saldo para uso e dedução da C.H. já utilizada.</p>
-                <div class="table-wrap custom-scrollbar max-h-[520px]">
+                <div class="table-wrap custom-scrollbar max-h-[500px]">
                     <table>
                         <thead>
                             <tr>
-                                <th title="Código e nome da turma">Turma</th>
-                                <th title="Categoria de ensino da turma">Modalidade</th>
-                                <th class="text-right" title="Quantidade de alunos com status Ativo na planilha">Alunos Ativos</th>
-                                <th class="text-right" title="O lado verde é a soma de campos de visita com datas preenchidas. O cinza é o teto máximo de visitas.">Visitas (Feitas / Prev) <i class="fa-solid fa-circle-info help-icon"></i></th>
-                                <th class="text-right" title="As visitas convertidas em Carga Horária">C.H. (Usada / Prev) <i class="fa-solid fa-circle-info help-icon"></i></th>
-                                <th class="text-right" title="Orçamento em Reais deduzido pelo valor da hora">Valores (Usado / Total)</th>
-                                <th class="text-right" title="Quantas horas esta turma ainda tem para realizar visitas">C.H. Restante</th>
-                                <th title="Verifica se a soma das horas dos alunos ativos estoura o limite da turma (100h)">Status Teto <i class="fa-solid fa-circle-info help-icon"></i></th>
+                                <th>Turma</th>
+                                <th>Modalidade</th>
+                                <th class="text-right">Alunos Ativos</th>
+                                <th class="text-right" title="Quantidade de visitas com data / Total teto permitido">Visitas Feitas / Teto</th>
+                                <th class="text-right text-emerald-700 bg-emerald-50">C.H. Utilizada</th>
+                                <th class="text-right">C.H. Restante p/ Teto</th>
+                                <th class="text-right">Custo Gerado</th>
+                                <th>Status Teto</th>
                             </tr>
                         </thead>
                         <tbody id="dashboard-table"></tbody>
@@ -485,44 +420,32 @@
             </div>
         </section>
 
-        <section id="tab-base" class="tab-panel space-y-5">
+        <!-- Other Sections (Omitted for Print) -->
+        <section id="tab-base" class="tab-panel space-y-5 no-print">
             <div class="panel p-5">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                     <div>
-                        <h2 class="text-lg font-black flex items-center gap-2">
-                            <i class="fa-solid fa-pen-to-square senac-blue-text"></i>
-                            Base de Dados Detalhada (Ajuste Fino)
-                        </h2>
-                        <p class="text-sm text-slate-500 mt-1">
-                            Verifique como o sistema interpretou a leitura. Ajuste manualmente os volumes ou adicione turmas que não constam nos relatórios.
-                        </p>
+                        <h2 class="text-lg font-black flex items-center gap-2"><i class="fa-solid fa-pen-to-square senac-blue-text"></i> Dados Extraídos (Ajuste Manual)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Veja e ajuste as turmas somadas pelas planilhas, caso necessário forçar algum valor.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button id="add-row" class="btn btn-outline">
-                            <i class="fa-solid fa-plus"></i>
-                            Nova turma
-                        </button>
-                        <button id="export-data" class="btn btn-orange">
-                            <i class="fa-solid fa-file-export"></i>
-                            Exportar CSV
-                        </button>
+                        <button id="add-row" class="btn btn-outline"><i class="fa-solid fa-plus"></i> Inserir Extra</button>
+                        <button id="export-data" class="btn btn-orange"><i class="fa-solid fa-file-export"></i> Exportar CSV</button>
                     </div>
                 </div>
             </div>
-
             <div class="panel p-5">
-                <div class="table-wrap custom-scrollbar max-h-[660px]">
+                <div class="table-wrap custom-scrollbar max-h-[600px]">
                     <table>
                         <thead>
                             <tr>
                                 <th>Turma</th>
                                 <th>Modalidade</th>
-                                <th class="text-right" title="Contagem de linhas ativas na planilha">Alunos Lidos</th>
-                                <th class="text-right" title="Teto de visitas por aluno na modalidade (3 para Qualificação, 6 para Técnica)">Teto Visitas/Aluno</th>
-                                <th class="text-right text-emerald-700 bg-emerald-50" title="Quantidade de células de visita com data preenchida">Visitas Totais Com Data</th>
-                                <th class="text-right">C.H. Total Prev.</th>
-                                <th class="text-right text-emerald-700 bg-emerald-50">C.H. Já Descontada</th>
-                                <th class="text-right">Custo Orçamentário Base</th>
+                                <th class="text-right">Alunos Encontrados</th>
+                                <th class="text-right">Teto Visitas</th>
+                                <th class="text-right text-emerald-700 bg-emerald-50">Visitas c/ Data</th>
+                                <th class="text-right">C.H. Prevista Limitada</th>
+                                <th class="text-right text-emerald-700 bg-emerald-50">Custo Financeiro Ativo</th>
                                 <th>Ação</th>
                             </tr>
                         </thead>
@@ -532,224 +455,43 @@
             </div>
         </section>
 
-        <section id="tab-simulator" class="tab-panel space-y-5">
+        <section id="tab-simulator" class="tab-panel space-y-5 no-print">
             <div class="panel p-5">
-                <h2 class="text-lg font-black flex items-center gap-2">
-                    <i class="fa-solid fa-flask senac-blue-text"></i>
-                    Simulador de Projetos (Criação de Cenários)
-                </h2>
-                <p class="text-sm text-slate-500 mt-1">
-                    Crie um cenário puramente hipotético do zero. Ao rodar a simulação, ela substituirá a visão da execução atual. A média padrão carregada no sistema é 870 + 500.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-3 mt-5 items-end">
-                    <div>
-                        <label class="field-label" for="sim-qual-alunos">Alunos qualificação</label>
-                        <input id="sim-qual-alunos" type="number" min="0" step="1" class="input" value="870">
-                    </div>
-                    <div>
-                        <label class="field-label" for="sim-tec-alunos">Alunos técnica</label>
-                        <input id="sim-tec-alunos" type="number" min="0" step="1" class="input" value="500">
-                    </div>
-                    <div>
-                        <label class="field-label" for="sim-qual-turmas">Turmas qual.</label>
-                        <input id="sim-qual-turmas" type="number" min="1" step="1" class="input" value="14">
-                    </div>
-                    <div>
-                        <label class="field-label" for="sim-tec-turmas">Turmas técnica</label>
-                        <input id="sim-tec-turmas" type="number" min="1" step="1" class="input" value="16">
-                    </div>
-                    <div>
-                        <button id="auto-turmas" class="btn btn-outline w-full" title="Sugere a quantidade de turmas com base no teto de horas">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            Sugerir Turmas
-                        </button>
-                    </div>
-                    <div>
-                        <button id="run-simulation" class="btn btn-primary w-full">
-                            <i class="fa-solid fa-play"></i>
-                            Gerar Simulação
-                        </button>
-                    </div>
+                <h2 class="text-lg font-black flex items-center gap-2"><i class="fa-solid fa-flask senac-blue-text"></i> Simulador de Cenários Novos</h2>
+                <p class="text-sm text-slate-500 mt-1 mb-4">Caso queira prever o impacto orçamentário se o volume de alunos subir no futuro.</p>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
+                    <div><label class="field-label">Alunos Qual.</label><input id="sim-qual-alunos" type="number" class="input" value="870"></div>
+                    <div><label class="field-label">Alunos Téc.</label><input id="sim-tec-alunos" type="number" class="input" value="500"></div>
+                    <div><label class="field-label">Turmas Qual.</label><input id="sim-qual-turmas" type="number" class="input" value="14"></div>
+                    <div><label class="field-label">Turmas Téc.</label><input id="sim-tec-turmas" type="number" class="input" value="16"></div>
+                    <button id="run-simulation" class="btn btn-primary w-full"><i class="fa-solid fa-play"></i> Prever Custos</button>
                 </div>
-                <div class="flex flex-wrap gap-2 mt-4">
-                    <button id="apply-simulation" class="btn btn-orange">
-                        <i class="fa-solid fa-check"></i>
-                        Aplicar simulação à base principal
-                    </button>
-                    <span id="simulation-status" class="status-text"></span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="kpi-card">
-                    <div><span class="icon bg-blue-50 senac-blue-text"><i class="fa-solid fa-users"></i></span><p class="kpi-label mt-3">Alunos simulados</p></div>
-                    <p id="sim-kpi-alunos" class="kpi-value">0</p>
-                </div>
-                <div class="kpi-card">
-                    <div><span class="icon bg-slate-100 text-slate-700"><i class="fa-solid fa-clock"></i></span><p class="kpi-label mt-3">C.H. Total Simulada</p></div>
-                    <p id="sim-kpi-horas" class="kpi-value">0h</p>
-                </div>
-                <div class="kpi-card">
-                    <div><span class="icon bg-orange-50 senac-orange-text"><i class="fa-solid fa-sack-dollar"></i></span><p class="kpi-label mt-3">Custo simulado</p></div>
-                    <p id="sim-kpi-custo" class="kpi-value">R$ 0,00</p>
-                </div>
-                <div class="kpi-card">
-                    <div><span class="icon bg-red-50 text-red-700"><i class="fa-solid fa-triangle-exclamation"></i></span><p class="kpi-label mt-3">Turmas acima do teto</p></div>
-                    <p id="sim-kpi-alerta" class="kpi-value">0</p>
-                </div>
-            </div>
-
-            <div class="panel p-5">
-                <div class="table-wrap custom-scrollbar max-h-[560px]">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Turma (Simulada)</th>
-                                <th>Modalidade</th>
-                                <th class="text-right">Alunos Distribuídos</th>
-                                <th class="text-right">C.H. Prevista</th>
-                                <th class="text-right">Sobra/Falta para 100h</th>
-                                <th class="text-right">Orçamento Previsto</th>
-                                <th>Status Teto</th>
-                            </tr>
-                        </thead>
-                        <tbody id="simulation-table"></tbody>
-                    </table>
+                <div class="mt-6 p-4 border-2 border-dashed border-orange-200 bg-orange-50 rounded-lg text-center">
+                    <p class="text-sm text-orange-800 font-bold mb-2">Simulação Rápida (Não afeta a Base Principal).</p>
+                    <p class="text-xl font-black text-senac-orange" id="sim-result-orcamento">R$ 0,00</p>
+                    <p class="text-xs text-orange-700" id="sim-result-ch">0 Horas Projetadas</p>
                 </div>
             </div>
         </section>
 
-        <section id="tab-travel" class="tab-panel space-y-5">
+        <section id="tab-travel" class="tab-panel space-y-5 no-print">
             <div class="panel p-5">
-                <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
-                    <div class="xl:col-span-2">
-                        <h2 class="text-lg font-black flex items-center gap-2">
-                            <i class="fa-solid fa-route senac-blue-text"></i>
-                            Gastos de deslocamento
-                        </h2>
-                        <p class="text-sm text-slate-500 mt-1">
-                            Lance combustível, pedágio e outros valores adicionais por turma. Para veículo próprio, o cálculo segue a regra do documento anexado (fator x 1,25).
-                        </p>
-                    </div>
-                    <div class="note">
-                        <strong>Fórmula Veículo Próprio:</strong>
-                        <br>(KM rodados ÷ consumo médio) = litros.
-                        <br>Litros × 1,25 × valor do combustível.
-                        <br><em>Rendimentos padrão: Gasolina 10 km/l; Álcool/Diesel 8 km/l.</em>
-                    </div>
+                <h2 class="text-lg font-black flex items-center gap-2 mb-4"><i class="fa-solid fa-route senac-blue-text"></i> Lançamento de Deslocamento Adicional</h2>
+                <div class="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+                    <div><label class="field-label">Turma</label><input id="travel-class" class="input" list="turmas-list"></div>
+                    <div><label class="field-label">Destino</label><input id="travel-destination" class="input"></div>
+                    <div><label class="field-label">Veículo</label><select id="travel-vehicle" class="input"><option>Senac</option><option>Próprio</option></select></div>
+                    <div><label class="field-label">KM (Ida+Volta)</label><input id="travel-km" type="number" class="input" value="0"></div>
+                    <div><label class="field-label">Pedágio/Outros</label><input id="travel-other" type="number" class="input" value="0"></div>
+                    <button id="add-travel" class="btn btn-primary w-full"><i class="fa-solid fa-plus"></i> Lançar</button>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-3 mt-5 items-end">
-                    <div>
-                        <label class="field-label" for="travel-date">Data</label>
-                        <input id="travel-date" type="date" class="input">
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-class">Turma Alvo</label>
-                        <input id="travel-class" class="input" list="turmas-list" placeholder="Ex: 202600216">
-                        <datalist id="turmas-list"></datalist>
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-destination">Destino</label>
-                        <input id="travel-destination" class="input" placeholder="Cidade/local">
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-vehicle">Veículo</label>
-                        <select id="travel-vehicle" class="input">
-                            <option value="Senac">Carro do Senac</option>
-                            <option value="Próprio">Veículo próprio</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-fuel">Combustível</label>
-                        <select id="travel-fuel" class="input">
-                            <option value="Gasolina">Gasolina</option>
-                            <option value="Álcool">Álcool</option>
-                            <option value="Diesel">Diesel</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button id="add-travel" class="btn btn-primary w-full">
-                            <i class="fa-solid fa-plus"></i>
-                            Lançar Custo
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-3">
-                    <div>
-                        <label class="field-label" for="travel-km">KM rodados (Ida+Volta)</label>
-                        <input id="travel-km" type="number" min="0" step="0.1" class="input" value="0">
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-fuel-price">Valor combustível</label>
-                        <input id="travel-fuel-price" type="number" min="0" step="0.01" class="input" value="6.00">
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-consumption">Consumo médio do carro</label>
-                        <input id="travel-consumption" type="number" min="0" step="0.1" class="input" value="10">
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-toll">Pedágio</label>
-                        <input id="travel-toll" type="number" min="0" step="0.01" class="input" value="0">
-                    </div>
-                    <div>
-                        <label class="field-label" for="travel-other">Outros (Estacionamento, etc)</label>
-                        <input id="travel-other" type="number" min="0" step="0.01" class="input" value="0">
-                    </div>
-                </div>
+                <datalist id="turmas-list"></datalist>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                <div class="kpi-card">
-                    <div><span class="icon bg-cyan-50 text-cyan-700"><i class="fa-solid fa-road"></i></span><p class="kpi-label mt-3">KM Lançados</p></div>
-                    <p id="travel-kpi-km" class="kpi-value">0</p>
-                </div>
-                <div class="kpi-card">
-                    <div><span class="icon bg-amber-50 text-amber-700"><i class="fa-solid fa-gas-pump"></i></span><p class="kpi-label mt-3">Combustível (Total)</p></div>
-                    <p id="travel-kpi-fuel" class="kpi-value">R$ 0,00</p>
-                </div>
-                <div class="kpi-card">
-                    <div><span class="icon bg-slate-100 text-slate-700"><i class="fa-solid fa-receipt"></i></span><p class="kpi-label mt-3">Pedágios & Outros</p></div>
-                    <p id="travel-kpi-other" class="kpi-value">R$ 0,00</p>
-                </div>
-                <div class="kpi-card">
-                    <div><span class="icon bg-orange-50 senac-orange-text"><i class="fa-solid fa-coins"></i></span><p class="kpi-label mt-3">Custo de Transporte Final</p></div>
-                    <p id="travel-kpi-total" class="kpi-value">R$ 0,00</p>
-                </div>
-            </div>
-
             <div class="panel p-5">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-                    <h2 class="text-lg font-black flex items-center gap-2">
-                        <i class="fa-solid fa-car-side senac-blue-text"></i>
-                        Diário de Lançamentos
-                    </h2>
-                    <button id="export-travel" class="btn btn-orange">
-                        <i class="fa-solid fa-file-export"></i>
-                        Exportar deslocamentos
-                    </button>
-                </div>
-                <div class="table-wrap custom-scrollbar max-h-[560px]">
+                <div class="flex justify-between mb-3"><h2 class="font-black text-lg">Histórico (Soma ao orçamento gasto)</h2><button id="export-travel" class="btn btn-outline py-1 px-3 text-xs"><i class="fa-solid fa-download"></i> CSV</button></div>
+                <div class="table-wrap max-h-[400px]">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Turma</th>
-                                <th>Destino</th>
-                                <th>Veículo</th>
-                                <th>Comb.</th>
-                                <th class="text-right">KM</th>
-                                <th class="text-right">Consumo</th>
-                                <th class="text-right">Valor/litro</th>
-                                <th class="text-right">Fator Ext.</th>
-                                <th class="text-right">Gasto Comb.</th>
-                                <th class="text-right">Pedágio</th>
-                                <th class="text-right">Outros</th>
-                                <th class="text-right">Soma Viagem</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Turma</th><th>Destino</th><th>Veículo</th><th class="text-right">KM</th><th class="text-right">Extra</th><th class="text-right">Total (R$)</th><th>Ação</th></tr></thead>
                         <tbody id="travel-table"></tbody>
                     </table>
                 </div>
@@ -758,987 +500,384 @@
     </main>
 
     <script>
-        const MODALIDADES = {
-            QUAL: 'Qualificação',
-            TEC: 'Técnica'
-        };
+        const MODALIDADES = { QUAL: 'Qualificação', TEC: 'Técnica' };
+        const DEFAULT_VISITS = { [MODALIDADES.QUAL]: 3, [MODALIDADES.TEC]: 6 };
+        
+        // BASE DE CONSULTA GERAL
+        const ALUNOS_BASE_QUAL = 870;
+        const ALUNOS_BASE_TEC = 500;
+        const ALUNOS_META = ALUNOS_BASE_QUAL + ALUNOS_BASE_TEC;
 
-        const DEFAULT_VISITS = {
-            [MODALIDADES.QUAL]: 3,
-            [MODALIDADES.TEC]: 6
-        };
-
-        const META_ANUAL = 1370; // 870 Qual + 500 Tec
-
-        const FUEL_CONSUMPTION = {
-            'Gasolina': 10,
-            'Álcool': 8,
-            'Diesel': 8
-        };
-
-        let config = {
-            valorHora: 3.75,
-            horasPorVisita: 0.5,
-            tetoHoras: 100
-        };
-
-        let turmas = [];
-        let simulatedRows = [];
+        let config = { valorHora: 3.75, horasPorVisita: 0.5, tetoHoras: 100 };
+        let turmas = []; // Matriz da Execução (soma das planilhas)
         let travelRows = [];
         let chartHours = null;
-        let chartCosts = null;
+        let chartModality = null;
 
-        /**
-         * Função segura para adicionar eventos a elementos do DOM.
-         */
-        function addSafeEventListener(id, event, callback) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.addEventListener(event, callback);
-            } else {
-                console.warn(`Elemento com ID '${id}' não encontrado. O evento '${event}' não foi anexado.`);
-            }
-        }
-
-        const $ = (id) => document.getElementById(id);
-        const brl = (value) => (Number(value) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const num = (value) => Number(String(value ?? '').replace(',', '.')) || 0;
-        const intNum = (value) => Math.max(0, Math.round(num(value)));
-        const fmt = (value, digits = 1) => (Number(value) || 0).toLocaleString('pt-BR', {
-            minimumFractionDigits: digits,
-            maximumFractionDigits: digits
-        });
+        const $ = id => document.getElementById(id);
+        const brl = v => (Number(v)||0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        const num = v => Number(String(v??'').replace(',', '.'))||0;
+        const fmt = (v, d=1) => (Number(v)||0).toLocaleString('pt-BR', {minimumFractionDigits:d, maximumFractionDigits:d});
         const uid = () => Math.random().toString(36).slice(2, 10);
+        const norm = v => String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
-        function normalizeText(value) {
-            return String(value ?? '')
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-                .trim();
+        // --- LOCAL STORAGE (Persistence) ---
+        function saveData() {
+            localStorage.setItem('senac_execucao', JSON.stringify(turmas));
+            localStorage.setItem('senac_travel', JSON.stringify(travelRows));
+            localStorage.setItem('senac_config', JSON.stringify(config));
         }
 
-        function todayISO() {
-            const now = new Date();
-            return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-        }
-
-        // Função que gera a previsão de turmas a partir da quantidade de alunos (a "Base Média")
-        function buildBalancedRows(prefix, modalidade, totalAlunos, visitasTotal, turmaCount = null) {
-            const horasAluno = visitasTotal * config.horasPorVisita;
-            const maxAlunosPorTurma = Math.max(1, Math.floor(config.tetoHoras / Math.max(horasAluno, 0.01)));
-            const totalTurmas = turmaCount || Math.max(1, Math.ceil(totalAlunos / maxAlunosPorTurma));
-            const base = Math.floor(totalAlunos / totalTurmas);
-            const resto = totalAlunos % totalTurmas;
+        function loadData() {
+            const savedConfig = localStorage.getItem('senac_config');
+            if (savedConfig) config = JSON.parse(savedConfig);
             
-            return Array.from({ length: totalTurmas }, (_, index) => ({
-                id: uid(),
-                turma: `${prefix}-${String(index + 1).padStart(2, '0')}`,
-                modalidade,
-                alunos: base + (index < resto ? 1 : 0),
-                visitasTotal,           // Planejadas por aluno
-                visitasRealizadas: 0    // Inicia zerado, pois é simulação
-            })).filter(row => row.alunos > 0);
-        }
+            if(config) {
+                if($('cfg-valor-hora')) $('cfg-valor-hora').value = config.valorHora;
+                if($('cfg-horas-visita')) $('cfg-horas-visita').value = config.horasPorVisita;
+                if($('cfg-teto')) $('cfg-teto').value = config.tetoHoras;
+            }
 
-        // ---------- RESTAURAÇÃO DA BASE MÉDIA (870+500 = 1370) ----------
-        function loadDefaultData() {
-            turmas = [
-                ...buildBalancedRows('QUAL', MODALIDADES.QUAL, 870, DEFAULT_VISITS[MODALIDADES.QUAL]),
-                ...buildBalancedRows('TEC', MODALIDADES.TEC, 500, DEFAULT_VISITS[MODALIDADES.TEC])
-            ];
-            setStatus('Base Média Carregada (Previsão Anual). Suba arquivos CSV/Excel para ler a execução real da sua unidade.', 'info');
+            const savedTurmas = localStorage.getItem('senac_execucao');
+            const savedTravel = localStorage.getItem('senac_travel');
             
-            const pillEl = $('status-base-pill');
-            if(pillEl) {
-                pillEl.innerHTML = '<i class="fa-solid fa-database"></i> Previsão Anual de Metas Ativa';
-                pillEl.className = 'pill pill-gray w-fit';
+            turmas = (savedTurmas && savedTurmas !== '[]') ? JSON.parse(savedTurmas) : [];
+            travelRows = savedTravel ? JSON.parse(savedTravel) : [];
+            
+            if(turmas.length > 0) {
+                setStatus('Execução recuperada da última sessão.', 'info');
             }
             renderAll();
         }
 
-        function readConfigFromInputs() {
-            const elValorHora = $('cfg-valor-hora');
-            const elHorasVisita = $('cfg-horas-visita');
-            const elTeto = $('cfg-teto');
-
-            if(elValorHora) config.valorHora = Math.max(0, num(elValorHora.value));
-            if(elHorasVisita) config.horasPorVisita = Math.max(0, num(elHorasVisita.value));
-            if(elTeto) config.tetoHoras = Math.max(1, num(elTeto.value));
+        function clearData() {
+            if(confirm("Tem certeza que deseja apagar a execução de todas as turmas importadas? A Base Fixa de Consulta continuará a mesma.")) {
+                localStorage.removeItem('senac_execucao');
+                localStorage.removeItem('senac_travel');
+                turmas = [];
+                travelRows = [];
+                setStatus('Aguardando envio de planilhas para iniciar a soma da execução...', 'info');
+                renderAll();
+            }
         }
 
-        function setStatus(message, type = 'info') {
+        function setStatus(msg, type='info') {
             const el = $('import-status');
-            if(!el) return;
-            el.innerHTML = `<strong>Aviso do Sistema:</strong> ${message}`;
-            el.className = 'status-text mt-3 ' + (
-                type === 'error' ? 'text-red-700' :
-                type === 'ok' ? 'text-emerald-700' :
-                'text-slate-600'
-            );
+            if(el) el.innerHTML = `<span class="${type==='error'?'text-red-600':type==='ok'?'text-emerald-600':'text-senac-blue'}">${msg}</span>`;
         }
 
+        // --- BASE DE CONSULTA FIXA ---
+        function getPrevisaoBase() {
+            const visitasQual = ALUNOS_BASE_QUAL * DEFAULT_VISITS[MODALIDADES.QUAL];
+            const visitasTec = ALUNOS_BASE_TEC * DEFAULT_VISITS[MODALIDADES.TEC];
+            const visitasTotal = visitasQual + visitasTec;
+            
+            const chTotal = visitasTotal * config.horasPorVisita;
+            const orcamentoTotal = chTotal * config.valorHora;
+
+            return { visitas: visitasTotal, chTotal, orcamentoTotal };
+        }
+
+        function renderPrevisaoGeral() {
+            const base = getPrevisaoBase();
+            if($('base-visitas')) $('base-visitas').textContent = base.visitas.toLocaleString('pt-BR');
+            if($('base-ch')) $('base-ch').textContent = fmt(base.chTotal) + 'h';
+            if($('base-orcamento')) $('base-orcamento').textContent = brl(base.orcamentoTotal);
+            return base;
+        }
+
+        // --- LÓGICA CORE (EXECUÇÃO) ---
         function enrichRow(row) {
-            const alunos = Math.max(0, num(row.alunos));
-            const visitasTotal = Math.max(0, num(row.visitasTotal)); // Visitas PREVISTAS por aluno (3 ou 6)
-            const visitasRealizadas = Math.max(0, num(row.visitasRealizadas)); // Soma TOTAL de visitas com data da turma
-            
-            // Orçamento e C.H Previstos
-            const totalVisitasPrevistas = alunos * visitasTotal;
-            const horasTotaisPrevistas = totalVisitasPrevistas * config.horasPorVisita;
-            const custoTotalPrevisto = horasTotaisPrevistas * config.valorHora;
-            
-            // Execução (Uso Real)
-            const horasUtilizadas = visitasRealizadas * config.horasPorVisita;
-            const valorUtilizado = horasUtilizadas * config.valorHora;
-            
-            // Restante (Saldos)
-            const horasRestantes = horasTotaisPrevistas - horasUtilizadas;
-            const custoRestante = custoTotalPrevisto - valorUtilizado;
-
-            const saldoTeto = config.tetoHoras - horasTotaisPrevistas;
-
-            return {
-                ...row,
-                alunos,
-                visitasTotal,
-                visitasRealizadas,
-                totalVisitasPrevistas,
-                horasTotaisPrevistas,
-                custoTotalPrevisto,
-                horasUtilizadas,
-                valorUtilizado,
-                horasRestantes,
-                custoRestante,
-                saldoTeto,
-                estourou: saldoTeto < 0
-            };
+            const a = Math.max(0, num(row.alunos)), vt = Math.max(0, num(row.visitasTotal)), vr = Math.max(0, num(row.visitasRealizadas));
+            const hpv = config.horasPorVisita, vh = config.valorHora;
+            const tp = a * vt, hp = tp * hpv, cp = hp * vh;
+            const hu = vr * hpv, vu = hu * vh;
+            const hr = hp - hu, cr = cp - vu, st = config.tetoHoras - hp;
+            return { ...row, alunos: a, visitasTotal: vt, visitasRealizadas: vr, totalVisitasPrevistas: tp, horasTotaisPrevistas: hp, custoTotalPrevisto: cp, horasUtilizadas: hu, valorUtilizado: vu, horasRestantes: hr, custoRestante: cr, saldoTeto: st, estourou: st < 0 };
         }
 
-        function getEnrichedRows(rows = turmas) {
-            return rows.map(enrichRow);
-        }
-
-        function getFilteredRows() {
-            const filterModalityEl = $('filter-modality');
-            const filterSearchEl = $('filter-search');
-            const filterRiskEl = $('filter-risk');
-
-            const modalidade = filterModalityEl ? filterModalityEl.value : 'all';
-            const search = filterSearchEl ? normalizeText(filterSearchEl.value) : '';
-            const risk = filterRiskEl ? filterRiskEl.value : 'all';
-
-            return getEnrichedRows().filter(row => {
-                if (modalidade !== 'all' && row.modalidade !== modalidade) return false;
-                if (search && !normalizeText(row.turma).includes(search)) return false;
-                if (risk === 'over' && !row.estourou) return false;
-                if (risk === 'ok' && row.estourou) return false;
-                return true;
-            });
-        }
-
+        function getEnrichedRows() { return turmas.map(enrichRow); }
+        
         function summarizeRows(rows) {
-            return rows.reduce((acc, row) => {
-                acc.alunos += row.alunos;
+            return rows.reduce((acc, r) => {
+                acc.a += r.alunos; acc.tp += r.totalVisitasPrevistas; acc.vr += r.visitasRealizadas;
+                acc.hp += r.horasTotaisPrevistas; acc.hu += r.horasUtilizadas; acc.hr += Math.max(0, r.horasRestantes);
+                acc.cp += r.custoTotalPrevisto; acc.vu += r.valorUtilizado; acc.cr += Math.max(0, r.custoRestante);
+                acc.est += r.estourou ? 1 : 0;
                 
-                acc.totalVisitasPrevistas += row.totalVisitasPrevistas;
-                acc.visitasRealizadas += row.visitasRealizadas;
-                
-                acc.horasTotaisPrevistas += row.horasTotaisPrevistas;
-                acc.horasUtilizadas += row.horasUtilizadas;
-                acc.horasRestantes += Math.max(0, row.horasRestantes);
-                
-                acc.custoTotalPrevisto += row.custoTotalPrevisto;
-                acc.valorUtilizado += row.valorUtilizado;
-                acc.custoRestante += Math.max(0, row.custoRestante);
-                
-                acc.estouradas += row.estourou ? 1 : 0;
+                if(r.modalidade === MODALIDADES.QUAL) acc.custoQual += r.valorUtilizado;
+                else acc.custoTec += r.valorUtilizado;
+
                 return acc;
-            }, {
-                alunos: 0,
-                totalVisitasPrevistas: 0,
-                visitasRealizadas: 0,
-                horasTotaisPrevistas: 0,
-                horasUtilizadas: 0,
-                horasRestantes: 0,
-                custoTotalPrevisto: 0,
-                valorUtilizado: 0,
-                custoRestante: 0,
-                estouradas: 0
-            });
+            }, {a:0, tp:0, vr:0, hp:0, hu:0, hr:0, cp:0, vu:0, cr:0, est:0, custoQual:0, custoTec:0});
         }
 
-        function calcTravel(row) {
-            const km = Math.max(0, num(row.km));
-            const consumo = Math.max(0.01, num(row.consumo));
-            const valorCombustivel = Math.max(0, num(row.valorCombustivel));
-            const pedagio = Math.max(0, num(row.pedagio));
-            const outros = Math.max(0, num(row.outros));
-            const fator = row.veiculo === 'Próprio' ? 1.25 : 1;
-            const litrosBase = km / consumo;
-            const combustivel = litrosBase * fator * valorCombustivel;
-            const total = combustivel + pedagio + outros;
-            return { ...row, km, consumo, valorCombustivel, pedagio, outros, fator, litrosBase, combustivel, total };
-        }
-
-        function summarizeTravel() {
-            return travelRows.map(calcTravel).reduce((acc, row) => {
-                acc.km += row.km;
-                acc.combustivel += row.combustivel;
-                acc.pedagioOutros += row.pedagio + row.outros;
-                acc.total += row.total;
-                return acc;
-            }, { km: 0, combustivel: 0, pedagioOutros: 0, total: 0 });
-        }
-
+        // --- RENDER DASHBOARD ---
         function renderDashboard() {
-            const rows = getFilteredRows().sort((a, b) => b.horasTotaisPrevistas - a.horasTotaisPrevistas);
-            const totals = summarizeRows(rows);
-            const travel = summarizeTravel();
+            const base = renderPrevisaoGeral(); // Update fixed panel variables
 
-            // Mostramos o número atual e comparamos com a meta de 1370
+            const fMod = $('filter-modality')?.value || 'all', fSrc = norm($('filter-search')?.value || ''), fRsk = $('filter-risk')?.value || 'all';
+            const rows = getEnrichedRows().filter(r => (fMod==='all'||r.modalidade===fMod) && (!fSrc||norm(r.turma).includes(fSrc)) && (fRsk==='all'||(fRsk==='over'&&r.estourou)||(fRsk==='ok'&&!r.estourou))).sort((a,b) => b.horasTotaisPrevistas - a.horasTotaisPrevistas);
+            
+            const t = summarizeRows(rows);
+            const trvTotal = travelRows.reduce((sum, r) => sum + (num(r.km)/10 * (r.veiculo==='Próprio'?1.25:1) * num(r.valorCombustivel||6)) + num(r.pedagio) + num(r.outros), 0);
+            const orcamentoTotalGasto = t.vu + trvTotal;
+
             if($('kpi-alunos')) {
-                const corStatusAlunos = totals.alunos > META_ANUAL ? 'text-red-600' : 'text-senac-blue';
-                $('kpi-alunos').innerHTML = `<span class="${corStatusAlunos}">${totals.alunos.toLocaleString('pt-BR')}</span> <span class="text-slate-400 text-lg">/ ${META_ANUAL.toLocaleString('pt-BR')}</span>`;
+                $('kpi-alunos').textContent = t.a.toLocaleString('pt-BR');
+                const pct = Math.min(100, (t.a / ALUNOS_META)*100);
+                $('prog-alunos').style.width = `${pct}%`;
+                $('kpi-alunos-pct').textContent = `${pct.toFixed(1).replace('.',',')}%`;
+            }
+            if($('kpi-horas-total')) {
+                $('kpi-horas-total').textContent = `${fmt(t.hu)}h`;
+                const pct = base.chTotal > 0 ? Math.min(100, (t.hu / base.chTotal)*100) : 0;
+                $('prog-horas').style.width = `${pct}%`;
+                $('kpi-horas-pct').textContent = `${pct.toFixed(1).replace('.',',')}%`;
+            }
+            if($('kpi-custo-total')) {
+                $('kpi-custo-total').textContent = brl(orcamentoTotalGasto);
+                const pct = base.orcamentoTotal > 0 ? Math.min(100, (orcamentoTotalGasto / base.orcamentoTotal)*100) : 0;
+                $('prog-orcamento').style.width = `${pct}%`;
+                $('kpi-orcamento-pct').textContent = `${pct.toFixed(1).replace('.',',')}%`;
+            }
+            if($('kpi-saldo-global')) {
+                const saldo = base.orcamentoTotal - orcamentoTotalGasto;
+                $('kpi-saldo-global').textContent = brl(saldo);
+                $('kpi-saldo-global').className = saldo >= 0 ? "text-2xl font-black text-slate-800" : "text-2xl font-black text-red-600";
             }
             
-            // Usada / Total
-            if($('kpi-visitas-total')) $('kpi-visitas-total').innerHTML = `<span class="text-emerald-700">${totals.visitasRealizadas.toLocaleString('pt-BR')}</span> / <span class="text-slate-400">${totals.totalVisitasPrevistas.toLocaleString('pt-BR')}</span>`;
-            if($('kpi-horas-total')) $('kpi-horas-total').innerHTML = `<span class="text-emerald-700">${fmt(totals.horasUtilizadas)}h</span> / <span class="text-slate-400">${fmt(totals.horasTotaisPrevistas)}h</span>`;
-            if($('kpi-custo-total')) $('kpi-custo-total').innerHTML = `<span class="text-emerald-700">${brl(totals.valorUtilizado)}</span>`;
-            
-            // Restantes
-            if($('kpi-horas-restante')) $('kpi-horas-restante').textContent = `${fmt(totals.horasRestantes)}h`;
-            if($('kpi-custo-restante')) $('kpi-custo-restante').textContent = brl(totals.custoRestante);
+            if($('kpi-estouradas')) $('kpi-estouradas').innerHTML = `<span class="${t.est > 0 ? 'text-red-600 font-bold' : 'text-slate-600'}">${t.est} Turmas Acima do Teto</span>`;
 
-            if($('kpi-deslocamento')) $('kpi-deslocamento').textContent = brl(travel.total);
-            if($('kpi-estouradas')) {
-                const corEstouro = totals.estouradas > 0 ? 'text-red-700' : 'text-slate-800';
-                $('kpi-estouradas').innerHTML = `<span class="${corEstouro}">${totals.estouradas.toLocaleString('pt-BR')}</span>`;
-            }
-
-            renderDashboardTable(rows);
-            renderCharts(rows, totals, travel);
-        }
-
-        function renderCharts(rows, totals, travel) {
-            const ctxHoursEl = $('chart-hours');
-            if(!ctxHoursEl) return;
-
-            const ctxHours = ctxHoursEl.getContext('2d');
-            const topRows = rows.slice(0, 30);
-            if (chartHours) chartHours.destroy();
-            chartHours = new Chart(ctxHours, {
-                type: 'bar',
-                data: {
-                    labels: topRows.map(row => row.turma),
-                    datasets: [
-                        {
-                            type: 'line',
-                            label: `Teto (${fmt(config.tetoHoras, 0)}h)`,
-                            data: topRows.map(() => config.tetoHoras),
-                            borderColor: '#f37021',
-                            borderWidth: 2,
-                            borderDash: [6, 4],
-                            pointRadius: 0,
-                            fill: false
-                        },
-                        {
-                            label: 'C.H. Restante',
-                            data: topRows.map(row => Math.max(0, row.horasRestantes)),
-                            backgroundColor: topRows.map(row => row.estourou ? '#fca5a5' : '#94a3b8'), // cinza / vermelho leve
-                            borderRadius: 0
-                        },
-                        {
-                            label: 'C.H. Já Utilizada',
-                            data: topRows.map(row => row.horasUtilizadas),
-                            backgroundColor: '#059669', // Emerald
-                            borderRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { stacked: true },
-                        y: { stacked: true, beginAtZero: true, suggestedMax: Math.max(config.tetoHoras * 1.2, 120) }
-                    },
-                    plugins: {
-                        legend: { position: 'top', labels: { usePointStyle: true } },
-                        tooltip: {
-                            callbacks: {
-                                label(context) {
-                                    return `${context.dataset.label}: ${fmt(context.raw)}h`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const ctxCostsEl = $('chart-costs');
-            if(!ctxCostsEl) return;
-
-            const ctxCosts = ctxCostsEl.getContext('2d');
-            if (chartCosts) chartCosts.destroy();
-            chartCosts = new Chart(ctxCosts, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Orçamento Utilizado', 'Orçamento Restante', 'Deslocamento Lançado'],
-                    datasets: [{
-                        data: [totals.valorUtilizado, totals.custoRestante, travel.total],
-                        backgroundColor: ['#059669', '#cbd5e1', '#f37021'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '62%',
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label(context) {
-                                    return `${context.label}: ${brl(context.raw)}`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderDashboardTable(rows) {
+            // Table
             const tbody = $('dashboard-table');
-            if(!tbody) return;
-            if (!rows.length) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-slate-500 py-8">Nenhuma turma encontrada com os filtros atuais. Importe planilhas ou adicione manualmente.</td></tr>';
-                return;
+            if(tbody) {
+                tbody.innerHTML = rows.length ? rows.map(r => `
+                    <tr class="${r.estourou ? 'row-alert' : ''}">
+                        <td class="font-bold text-slate-800">${r.turma}</td>
+                        <td><span class="pill ${r.modalidade===MODALIDADES.TEC?'pill-orange':'pill-blue'}">${r.modalidade}</span></td>
+                        <td class="text-right font-bold text-slate-600">${r.alunos}</td>
+                        <td class="text-right"><span class="text-emerald-600 font-black text-sm">${r.visitasRealizadas}</span> <span class="text-slate-400">/ ${r.totalVisitasPrevistas}</span></td>
+                        <td class="text-right bg-emerald-50"><span class="text-emerald-700 font-black">${fmt(r.horasUtilizadas)}h</span></td>
+                        <td class="text-right font-bold ${r.horasRestantes <= 0 ? 'text-red-600' : 'text-slate-500'}">${fmt(r.horasRestantes)}h</td>
+                        <td class="text-right font-bold text-senac-orange">${brl(r.valorUtilizado)}</td>
+                        <td>${r.estourou ? '<span class="pill pill-red">Estourou Limite</span>' : '<span class="pill pill-green">Dentro do teto</span>'}</td>
+                    </tr>
+                `).join('') : '<tr><td colspan="8" class="text-center text-slate-500 py-6">Nenhuma turma adicionada à execução ainda. Importe arquivos.</td></tr>';
             }
 
-            tbody.innerHTML = rows.map(row => `
-                <tr class="${row.estourou ? 'row-alert' : ''}">
-                    <td class="font-black text-slate-800">${escapeHtml(row.turma)}</td>
-                    <td>${modalityPill(row.modalidade)}</td>
-                    <td class="text-right font-bold" title="Lidos ${row.alunos} alunos ativos nesta turma.">${row.alunos.toLocaleString('pt-BR')}</td>
-                    <td class="text-right">
-                        <span class="text-emerald-700 font-bold" title="Visitas contadas a partir de datas inseridas">${row.visitasRealizadas.toLocaleString('pt-BR')}</span> <span class="text-slate-400">/ ${row.totalVisitasPrevistas.toLocaleString('pt-BR')}</span>
-                    </td>
-                    <td class="text-right">
-                        <span class="text-emerald-700 font-black">${fmt(row.horasUtilizadas)}h</span> <span class="text-slate-400 font-bold">/ ${fmt(row.horasTotaisPrevistas)}h</span>
-                    </td>
-                    <td class="text-right">
-                        <span class="text-emerald-700 font-bold">${brl(row.valorUtilizado)}</span> <span class="text-slate-400">/ ${brl(row.custoTotalPrevisto)}</span>
-                    </td>
-                    <td class="text-right font-black ${row.horasRestantes <= 0 ? 'text-red-700' : 'text-slate-700'}">${fmt(row.horasRestantes)}h</td>
-                    <td>${row.estourou ? '<span class="pill pill-red" title="Passou das 100 horas!"><i class="fa-solid fa-circle-exclamation"></i>Estourada</span>' : '<span class="pill pill-green"><i class="fa-solid fa-check"></i>No limite</span>'}</td>
-                </tr>
-            `).join('');
+            // Charts
+            const topRows = rows.slice(0, 25);
+            if(chartHours) chartHours.destroy();
+            if($('chart-hours') && topRows.length > 0) {
+                chartHours = new Chart($('chart-hours').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: topRows.map(r => r.turma),
+                        datasets: [
+                            { type: 'line', label: 'Teto (100h)', data: topRows.map(() => config.tetoHoras), borderColor: '#ef4444', borderWidth: 2, borderDash: [5,5], pointRadius: 0 },
+                            { label: 'C.H. Restante Permitida', data: topRows.map(r => Math.max(0, r.horasRestantes)), backgroundColor: topRows.map(r => r.estourou ? '#fca5a5' : '#e2e8f0') },
+                            { label: 'C.H. Já Lançada (Visitas)', data: topRows.map(r => r.horasUtilizadas), backgroundColor: '#059669', borderRadius: 4 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { position: 'top' } } }
+                });
+            }
+
+            if(chartModality) chartModality.destroy();
+            if($('chart-modality')) {
+                chartModality = new Chart($('chart-modality').getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Qualificação (Executado)', 'Técnica (Executado)', 'Deslocamentos (Gastos)'],
+                        datasets: [{
+                            data: [t.custoQual, t.custoTec, trvTotal],
+                            backgroundColor: ['#004587', '#f37021', '#94a3b8'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom' } } }
+                });
+            }
         }
 
-        function modalityPill(modalidade) {
-            const cls = modalidade === MODALIDADES.TEC ? 'pill-orange' : 'pill-blue';
-            return `<span class="pill ${cls}">${escapeHtml(modalidade)}</span>`;
+        // --- EXCEL IMPORT LOGIC (CONTINUOUS ADD/MERGE) ---
+        function findCol(row, aliases) {
+            const keys = Object.keys(row), norms = keys.map(k => ({k, n: norm(k)}));
+            for(let a of aliases) { let ex = norms.find(i=>i.n===norm(a)); if(ex) return ex.k; }
+            for(let a of aliases) { let p = norms.find(i=>i.n.includes(norm(a))); if(p) return p.k; }
+            return null;
+        }
+
+        async function processFiles(files) {
+            if(!files.length) return;
+            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Processando arquivos e mesclando com a base existente...', 'info');
+            
+            const uploadBatchMap = new Map();
+            let totalLidos = 0, totalIgnorados = 0;
+
+            for(let file of files) {
+                const buffer = await file.arrayBuffer();
+                const wb = XLSX.read(buffer, {type: 'array'});
+                wb.SheetNames.forEach(sn => {
+                    XLSX.utils.sheet_to_json(wb.Sheets[sn], {defval:''}).forEach(row => {
+                        const isDesligado = norm(row[findCol(row, ['desligado', 'encerrado'])]||'') === 'sim';
+                        const status = norm(row[findCol(row, ['status', 'situacao'])]||'');
+                        const isCancelado = status.includes('cancel')||status.includes('desist')||status.includes('inativ');
+                        
+                        if(isDesligado || isCancelado) { totalIgnorados++; return; }
+                        totalLidos++;
+
+                        const turma = String(row[findCol(row, ['turma'])]||'').trim() || 'Desconhecida';
+                        const isTec = Object.keys(row).some(k => norm(k).includes('4 visita')||norm(k).includes('5 visita')||norm(k).includes('6 visita'));
+                        const mod = isTec ? MODALIDADES.TEC : MODALIDADES.QUAL;
+                        
+                        const visits = Object.keys(row).filter(k => /^\d+ª?\s*visita/i.test(k)).filter(k => String(row[k]).trim()).length;
+
+                        const key = `${mod}::${turma}`;
+                        if(!uploadBatchMap.has(key)) uploadBatchMap.set(key, {id:uid(), turma, modalidade: mod, alunos: 0, visitasTotal: DEFAULT_VISITS[mod], visitasRealizadas: 0});
+                        
+                        const g = uploadBatchMap.get(key);
+                        g.alunos += 1;
+                        g.visitasRealizadas += visits;
+                    });
+                });
+            }
+
+            if(uploadBatchMap.size > 0) {
+                // Lógica de Soma/Atualização:
+                // Pegamos o que já existe em 'turmas' e atualizamos com a nova leitura do Batch atual.
+                const existingMap = new Map(turmas.map(t => [`${t.modalidade}::${t.turma}`, t]));
+                
+                uploadBatchMap.forEach((batchRow, key) => {
+                    // Se for um update de uma turma, substitui (assumindo que a planilha nova tem os dados atualizados reais)
+                    // Se for nova, apenas adiciona.
+                    existingMap.set(key, batchRow);
+                });
+
+                turmas = [...existingMap.values()];
+                saveData();
+                setStatus(`Sucesso! <b>${totalLidos} novos alunos</b> lidos das planilhas e adicionados/mesclados à Execução.`, 'ok');
+                renderAll();
+            } else {
+                setStatus('Erro: Nenhum aluno ativo válido encontrado nas planilhas submetidas.', 'error');
+            }
+        }
+
+        // --- DRAG AND DROP SETUP ---
+        function setupDragAndDrop() {
+            const dropZone = $('drop-zone');
+            if(!dropZone) return;
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+            
+            ['dragenter', 'dragover'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false));
+            ['dragleave', 'drop'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false));
+            
+            dropZone.addEventListener('drop', e => processFiles(e.dataTransfer.files), false);
+            $('file-input')?.addEventListener('change', e => processFiles(e.target.files));
         }
 
         function renderEditableTable() {
             const tbody = $('editable-table');
-            if(!tbody) return;
-            const rows = getEnrichedRows().sort((a, b) => a.modalidade.localeCompare(b.modalidade) || a.turma.localeCompare(b.turma));
-
-            if (!rows.length) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-slate-500 py-8">Inclua uma turma ou importe uma planilha.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = rows.map(row => `
-                <tr data-id="${row.id}" class="${row.estourou ? 'row-alert' : ''}">
-                    <td><input class="input-sm min-w-[120px] font-bold" data-field="turma" value="${escapeAttr(row.turma)}"></td>
-                    <td>
-                        <select class="input-sm min-w-[130px]" data-field="modalidade">
-                            <option value="${MODALIDADES.QUAL}" ${row.modalidade === MODALIDADES.QUAL ? 'selected' : ''}>Qualificação</option>
-                            <option value="${MODALIDADES.TEC}" ${row.modalidade === MODALIDADES.TEC ? 'selected' : ''}>Técnica</option>
-                        </select>
-                    </td>
-                    <td class="text-right"><input class="input-sm w-20 text-right" type="number" min="0" step="1" data-field="alunos" value="${row.alunos}" title="Número de alunos identificados"></td>
-                    <td class="text-right"><input class="input-sm w-20 text-right" type="number" min="0" step="1" data-field="visitasTotal" value="${row.visitasTotal}" title="O padrão é 3 para Qualificação e 6 para Técnica"></td>
-                    <td class="text-right bg-emerald-50"><input class="input-sm w-24 text-right font-bold text-emerald-700 border-emerald-300 focus:border-emerald-500 focus:ring-emerald-500" type="number" min="0" step="1" data-field="visitasRealizadas" value="${row.visitasRealizadas}" title="Soma das colunas de visitas que já continham datas"></td>
-                    
-                    <td class="text-right text-slate-500">${fmt(row.horasTotaisPrevistas)}h</td>
-                    <td class="text-right font-black text-emerald-700 bg-emerald-50" title="Reflete o total de visitas preenchidas * hora da visita">${fmt(row.horasUtilizadas)}h</td>
-                    <td class="text-right font-bold text-slate-600">${brl(row.custoTotalPrevisto)}</td>
-                    
-                    <td><button class="btn btn-danger py-2 px-3" data-action="delete-row" title="Remover turma"><i class="fa-solid fa-trash"></i></button></td>
-                </tr>
-            `).join('');
+            if(tbody) tbody.innerHTML = turmas.map(r => `<tr data-id="${r.id}">
+                <td><input class="input-sm font-bold" data-field="turma" value="${r.turma}"></td>
+                <td><select class="input-sm" data-field="modalidade"><option ${r.modalidade===MODALIDADES.QUAL?'selected':''}>Qualificação</option><option ${r.modalidade===MODALIDADES.TEC?'selected':''}>Técnica</option></select></td>
+                <td class="text-right"><input type="number" class="input-sm w-16 text-right" data-field="alunos" value="${r.alunos}"></td>
+                <td class="text-right"><input type="number" class="input-sm w-16 text-right" data-field="visitasTotal" value="${r.visitasTotal}"></td>
+                <td class="text-right"><input type="number" class="input-sm w-20 text-right text-emerald-700 font-bold" data-field="visitasRealizadas" value="${r.visitasRealizadas}"></td>
+                <td class="text-right text-slate-500">${fmt(r.alunos * r.visitasTotal * config.horasPorVisita)}h</td>
+                <td class="text-right font-bold text-emerald-700 bg-emerald-50">${brl(r.visitasRealizadas * config.horasPorVisita * config.valorHora)}</td>
+                <td><button class="btn btn-danger py-1 px-2" data-action="delete"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`).join('');
+            if($('turmas-list')) $('turmas-list').innerHTML = [...new Set(turmas.map(r=>r.turma))].map(t=>`<option value="${t}">`).join('');
         }
-
-        function renderTurmasList() {
-            const listEl = $('turmas-list');
-            if(!listEl) return;
-            const options = [...new Set(turmas.map(row => row.turma).filter(Boolean))]
-                .sort((a, b) => a.localeCompare(b))
-                .map(turma => `<option value="${escapeAttr(turma)}"></option>`)
-                .join('');
-            listEl.innerHTML = options;
-        }
-
-        function renderTravel() {
-            const rows = travelRows.map(calcTravel);
-            const totals = summarizeTravel();
+        
+        function simularNovoCenario() {
+            const aQ = num($('sim-qual-alunos').value), aT = num($('sim-tec-alunos').value);
+            const tQ = num($('sim-qual-turmas').value), tT = num($('sim-tec-turmas').value);
             
-            if($('travel-kpi-km')) $('travel-kpi-km').textContent = fmt(totals.km);
-            if($('travel-kpi-fuel')) $('travel-kpi-fuel').textContent = brl(totals.combustivel);
-            if($('travel-kpi-other')) $('travel-kpi-other').textContent = brl(totals.pedagioOutros);
-            if($('travel-kpi-total')) $('travel-kpi-total').textContent = brl(totals.total);
-
-            const tbody = $('travel-table');
-            if(!tbody) return;
-            if (!rows.length) {
-                tbody.innerHTML = '<tr><td colspan="14" class="text-center text-slate-500 py-8">Nenhum deslocamento lançado. Preencha os campos acima para registrar viagens.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = rows.map(row => `
-                <tr data-id="${row.id}">
-                    <td><input class="input-sm min-w-[130px]" type="date" data-travel-field="data" value="${escapeAttr(row.data)}"></td>
-                    <td><input class="input-sm min-w-[120px] font-bold" data-travel-field="turma" value="${escapeAttr(row.turma)}"></td>
-                    <td><input class="input-sm min-w-[150px]" data-travel-field="destino" value="${escapeAttr(row.destino)}"></td>
-                    <td>
-                        <select class="input-sm min-w-[130px]" data-travel-field="veiculo">
-                            <option value="Senac" ${row.veiculo === 'Senac' ? 'selected' : ''}>Senac</option>
-                            <option value="Próprio" ${row.veiculo === 'Próprio' ? 'selected' : ''}>Próprio</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="input-sm min-w-[110px]" data-travel-field="combustivel">
-                            ${Object.keys(FUEL_CONSUMPTION).map(fuel => `<option value="${fuel}" ${row.combustivel === fuel ? 'selected' : ''}>${fuel}</option>`).join('')}
-                        </select>
-                    </td>
-                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.1" data-travel-field="km" value="${row.km}"></td>
-                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.1" data-travel-field="consumo" value="${row.consumo}"></td>
-                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.01" data-travel-field="valorCombustivel" value="${row.valorCombustivel}"></td>
-                    <td class="text-right font-bold text-slate-400">${fmt(row.fator, 2)}</td>
-                    <td class="text-right font-bold text-slate-700">${brl(row.combustivel)}</td>
-                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.01" data-travel-field="pedagio" value="${row.pedagio}"></td>
-                    <td class="text-right"><input class="input-sm w-24 text-right" type="number" min="0" step="0.01" data-travel-field="outros" value="${row.outros}"></td>
-                    <td class="text-right font-black text-senac-orange">${brl(row.total)}</td>
-                    <td><button class="btn btn-danger py-2 px-3" data-action="delete-travel"><i class="fa-solid fa-trash"></i></button></td>
-                </tr>
-            `).join('');
-        }
-
-        function renderSimulation() {
-            const rows = getEnrichedRows(simulatedRows);
-            const totals = summarizeRows(rows);
+            const vQ = aQ * 3, vT = aT * 6;
+            const chT = (vQ + vT) * config.horasPorVisita;
+            const orcT = chT * config.valorHora;
             
-            if($('sim-kpi-alunos')) $('sim-kpi-alunos').textContent = totals.alunos.toLocaleString('pt-BR');
-            if($('sim-kpi-horas')) $('sim-kpi-horas').textContent = `${fmt(totals.horasTotaisPrevistas)}h`;
-            if($('sim-kpi-custo')) $('sim-kpi-custo').textContent = brl(totals.custoTotalPrevisto);
-            if($('sim-kpi-alerta')) $('sim-kpi-alerta').textContent = totals.estouradas.toLocaleString('pt-BR');
-
-            const tbody = $('simulation-table');
-            if(!tbody) return;
-            if (!rows.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-slate-500 py-8">Rode uma simulação para visualizar o cenário de previsão.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = rows.sort((a, b) => b.horasTotaisPrevistas - a.horasTotaisPrevistas).map(row => `
-                <tr class="${row.estourou ? 'row-alert' : ''}">
-                    <td class="font-black">${escapeHtml(row.turma)}</td>
-                    <td>${modalityPill(row.modalidade)}</td>
-                    <td class="text-right">${row.alunos.toLocaleString('pt-BR')}</td>
-                    <td class="text-right font-black">${fmt(row.horasTotaisPrevistas)}h</td>
-                    <td class="text-right font-bold ${row.estourou ? 'text-red-700' : 'text-emerald-700'}">${fmt(row.saldoTeto)}h</td>
-                    <td class="text-right font-bold">${brl(row.custoTotalPrevisto)}</td>
-                    <td>${row.estourou ? '<span class="pill pill-red">Estoura o Teto</span>' : '<span class="pill pill-green">Dentro do teto</span>'}</td>
-                </tr>
-            `).join('');
+            $('sim-result-orcamento').textContent = brl(orcT);
+            $('sim-result-ch').textContent = `${fmt(chT)} Horas Globais (em ${tQ+tT} turmas)`;
         }
 
-        function renderAll() {
-            renderDashboard();
-            renderEditableTable();
-            renderTurmasList();
-            renderTravel();
-            renderSimulation();
-        }
+        function renderAll() { renderDashboard(); renderEditableTable(); }
 
-        function findColumn(row, aliases) {
-            const keys = Object.keys(row);
-            const normalized = keys.map(key => ({ key, norm: normalizeText(key) }));
-            for (const alias of aliases) {
-                const normAlias = normalizeText(alias);
-                const exact = normalized.find(item => item.norm === normAlias);
-                if (exact) return exact.key;
-            }
-            for (const alias of aliases) {
-                const normAlias = normalizeText(alias);
-                const partial = normalized.find(item => item.norm.includes(normAlias));
-                if (partial) return partial.key;
-            }
-            return null;
-        }
-
-        // ---------- LÓGICA DE DETECÇÃO AUTOMÁTICA DA MODALIDADE (3 vs 6 Visitas) ----------
-        function inferModalityAndVisits(row, fallback) {
-            // Se as colunas existirem no arquivo, é porque o arquivo suporta essa quantidade
-            const keys = Object.keys(row).map(k => normalizeText(k));
-            
-            // Verifica se possui as colunas da 4ª visita em diante
-            const isTecnica = keys.some(k => k.includes('4 visita') || k.includes('5 visita') || k.includes('6 visita'));
-
-            if (isTecnica) {
-                return { modalidade: MODALIDADES.TEC, visitasTotal: DEFAULT_VISITS[MODALIDADES.TEC] };
-            } 
-            
-            // Se o usuário selecionou uma opção forçada no Dropdown (ao invés de Detecção Auto)
-            if (fallback && fallback !== 'auto') {
-                return { modalidade: fallback, visitasTotal: DEFAULT_VISITS[fallback] || 3 };
-            }
-
-            // Padrão recai para Qualificação
-            return { modalidade: MODALIDADES.QUAL, visitasTotal: DEFAULT_VISITS[MODALIDADES.QUAL] };
-        }
-
-        function isActiveRow(row) {
-            // Ignorar se a coluna "Desligado/Encerrado" estiver como "Sim"
-            const desligadoCol = findColumn(row, ['desligado', 'encerrado', 'desligado/encerrado', 'desligado / encerrado']);
-            if (desligadoCol) {
-                const val = normalizeText(row[desligadoCol]);
-                if (val === 'sim' || val === 's') return false;
-            }
-
-            const statusCol = findColumn(row, ['status', 'situacao', 'situação', 'situacao matricula', 'status matricula']);
-            if (!statusCol) return true;
-            const status = normalizeText(row[statusCol]);
-            if (!status) return false;
-            
-            // Se cancelado ou inativo por qualquer motivo de quebra de contrato, é false
-            if (status.includes('cancel') || status.includes('desist') || status.includes('inativ') || status.includes('tranc') || status.includes('conclu')) return false;
-            
-            // Aceita Ativos e "Sem atendimento" 
-            return status.includes('ativo') || status.includes('ativa') || status.includes('matric') || status.includes('cursando') || status.includes('sem atendimento');
-        }
-
-        // ---------- LÓGICA DE DETECÇÃO DE DATAS DE VISITAS ----------
-        function countVisitsDates(row) {
-            // Encontra as colunas que casam com o padrão "1ª Visita", "2 Visita", "3a visita" etc
-            const visitKeys = Object.keys(row).filter(key => /^\d+ª?\s*visita/i.test(key));
-            let completedVisits = 0;
-            
-            for (const vk of visitKeys) {
-                const value = String(row[vk]).trim();
-                // Se a célula estiver preenchida (consideramos que há uma data)
-                if (value && value !== 'undefined' && value !== 'null') {
-                    completedVisits++;
-                }
-            }
-            return completedVisits;
-        }
-
-        function rowsFromWorkbook(workbook, fileName, fallback) {
-            const groups = new Map();
-            let readRows = 0;
-            let ignoredRows = 0;
-
-            workbook.SheetNames.forEach(sheetName => {
-                const sheet = workbook.Sheets[sheetName];
-                const rows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
-                
-                rows.forEach(row => {
-                    readRows += 1;
-                    
-                    // Se for inativo, pula.
-                    if (!isActiveRow(row)) {
-                        ignoredRows += 1;
-                        return;
-                    }
-
-                    const turmaCol = findColumn(row, ['turma', 'cod turma', 'codigo turma', 'código turma', 'id turma']);
-                    const turma = String(turmaCol ? row[turmaCol] : '').trim() || 'Sem turma identificada';
-                    
-                    // Detecção automática de 3 ou 6 visitas
-                    const { modalidade, visitasTotal } = inferModalityAndVisits(row, fallback);
-                    
-                    // Como cada linha é 1 aluno no seu relatório:
-                    const alunos = 1;
-                    
-                    // Analisa quantas datas tem preenchidas para esse aluno específico
-                    const visitasFeitasPeloAluno = countVisitsDates(row);
-                    
-                    const key = `${modalidade}::${turma}`;
-
-                    if (!groups.has(key)) {
-                        groups.set(key, {
-                            id: uid(),
-                            turma,
-                            modalidade,
-                            alunos: 0,
-                            visitasTotal, // Previstas pelo teto (3 ou 6)
-                            visitasRealizadas: 0 // Usadas (Soma das datas encontradas)
-                        });
-                    }
-                    const group = groups.get(key);
-                    group.alunos += alunos; // Incrementa 1 aluno ativo naquela turma
-                    group.visitasRealizadas += visitasFeitasPeloAluno; // Soma a quantidade de visitas com datas preenchidas desse aluno
-                });
-            });
-
-            return { rows: [...groups.values()], readRows, ignoredRows };
-        }
-
-        async function importFiles(files) {
-            if (!files.length) {
-                setStatus('Selecione ao menos um arquivo Excel ou CSV.', 'error');
-                return;
-            }
-
-            const fallbackEl = $('fallback-modality');
-            const fallback = fallbackEl ? fallbackEl.value : 'auto';
-            const allRows = [];
-            let totalRead = 0;
-            let totalIgnored = 0;
-
-            for (const file of files) {
-                const buffer = await file.arrayBuffer();
-                const workbook = XLSX.read(buffer, { type: 'array' });
-                const parsed = rowsFromWorkbook(workbook, file.name, fallback);
-                allRows.push(...parsed.rows);
-                totalRead += parsed.readRows;
-                totalIgnored += parsed.ignoredRows;
-            }
-
-            if (!allRows.length) {
-                setStatus('Nenhuma linha de aluno ativo foi localizada. Confira se a coluna Turma existe.', 'error');
-                return;
-            }
-
-            turmas = mergeImportedRows(allRows);
-            const totalAlunosImportados = turmas.reduce((acc, t) => acc + t.alunos, 0);
-            
-            setStatus(`<strong>Arquivos carregados com sucesso!</strong><br> Foram identificados ${totalAlunosImportados} alunos ATIVOS distribuídos em ${turmas.length} turmas. (${totalIgnored} alunos desligados/encerrados foram ignorados e não gastarão saldo).`, 'ok');
-            
-            const pillEl = $('status-base-pill');
-            if(pillEl) {
-                pillEl.innerHTML = '<i class="fa-solid fa-file-csv"></i> Painel Atualizado com a Execução Real';
-                pillEl.className = 'pill pill-green w-fit';
-            }
-
-            renderAll();
-        }
-
-        function mergeImportedRows(rows) {
-            const map = new Map();
-            rows.forEach(row => {
-                const key = `${row.modalidade}::${row.turma}`;
-                if (!map.has(key)) {
-                    map.set(key, { ...row, id: uid() });
-                    return;
-                }
-                const current = map.get(key);
-                current.alunos += row.alunos;
-                current.visitasRealizadas += row.visitasRealizadas; // Mescla também as visitas realizadas se as planilhas se complementarem
-            });
-            return [...map.values()];
-        }
-
-        function updateRow(id, field, value) {
-            turmas = turmas.map(row => {
-                if (row.id !== id) return row;
-                const next = { ...row };
-                if (['alunos', 'visitasTotal', 'visitasRealizadas'].includes(field)) {
-                    next[field] = Math.max(0, num(value));
-                } else {
-                    next[field] = value;
-                }
-                if (field === 'modalidade') {
-                    next.visitasTotal = DEFAULT_VISITS[value] || next.visitasTotal;
-                }
-                return next;
-            });
-            renderAll();
-        }
-
-        function addRow() {
-            turmas.push({
-                id: uid(),
-                turma: `NOVA-${turmas.length + 1}`,
-                modalidade: MODALIDADES.QUAL,
-                alunos: 0,
-                visitasTotal: DEFAULT_VISITS[MODALIDADES.QUAL],
-                visitasRealizadas: 0
-            });
-            renderAll();
-        }
-
-        function suggestSimulationTurmas() {
-            readConfigFromInputs(false);
-            const qualAlunosEl = $('sim-qual-alunos');
-            const tecAlunosEl = $('sim-tec-alunos');
-            const qualTurmasEl = $('sim-qual-turmas');
-            const tecTurmasEl = $('sim-tec-turmas');
-
-            if(qualAlunosEl && qualTurmasEl) {
-                const qualAlunos = intNum(qualAlunosEl.value);
-                qualTurmasEl.value = suggestTurmas(qualAlunos, DEFAULT_VISITS[MODALIDADES.QUAL]);
-            }
-            if(tecAlunosEl && tecTurmasEl) {
-                const tecAlunos = intNum(tecAlunosEl.value);
-                tecTurmasEl.value = suggestTurmas(tecAlunos, DEFAULT_VISITS[MODALIDADES.TEC]);
-            }
-            
-            runSimulation();
-        }
-
-        function suggestTurmas(totalAlunos, visitasTotal) {
-            const horasAluno = visitasTotal * config.horasPorVisita;
-            const maxAlunos = Math.max(1, Math.floor(config.tetoHoras / Math.max(horasAluno, 0.01)));
-            return Math.max(1, Math.ceil(totalAlunos / maxAlunos));
-        }
-
-        function runSimulation() {
-            readConfigFromInputs(false);
-            const qualAlunosEl = $('sim-qual-alunos');
-            const tecAlunosEl = $('sim-tec-alunos');
-            const qualTurmasEl = $('sim-qual-turmas');
-            const tecTurmasEl = $('sim-tec-turmas');
-
-            const qualAlunos = qualAlunosEl ? intNum(qualAlunosEl.value) : 870;
-            const tecAlunos = tecAlunosEl ? intNum(tecAlunosEl.value) : 500;
-            const qualTurmas = qualTurmasEl ? Math.max(1, intNum(qualTurmasEl.value)) : 14;
-            const tecTurmas = tecTurmasEl ? Math.max(1, intNum(tecTurmasEl.value)) : 16;
-
-            simulatedRows = [
-                ...buildBalancedRows('SIM-QUAL', MODALIDADES.QUAL, qualAlunos, DEFAULT_VISITS[MODALIDADES.QUAL], qualTurmas),
-                ...buildBalancedRows('SIM-TEC', MODALIDADES.TEC, tecAlunos, DEFAULT_VISITS[MODALIDADES.TEC], tecTurmas)
-            ];
-            const totals = summarizeRows(getEnrichedRows(simulatedRows));
-            
-            const statusEl = $('simulation-status');
-            if(statusEl) {
-                statusEl.textContent = `Cenário de Previsão gerado com sucesso. ${totals.estouradas} turmas ficariam acima do teto de 100h.`;
-            }
-            renderSimulation();
-        }
-
-        function applySimulation() {
-            if (!simulatedRows.length) runSimulation();
-            turmas = simulatedRows.map(row => ({ ...row, id: uid() }));
-            
-            const pillEl = $('status-base-pill');
-            if(pillEl) {
-                pillEl.innerHTML = '<i class="fa-solid fa-flask"></i> Simulação de Cenário Ativa';
-                pillEl.className = 'pill pill-orange w-fit';
-            }
-
-            setStatus('Sua simulação foi lançada para o painel principal, substituindo os dados reais.', 'info');
-            switchTab('dashboard');
-            renderAll();
-        }
-
-        function addTravel() {
-            const fuelEl = $('travel-fuel');
-            const fuel = fuelEl ? fuelEl.value : 'Gasolina';
-            const consumoEl = $('travel-consumption');
-            const consumo = (consumoEl ? num(consumoEl.value) : 0) || FUEL_CONSUMPTION[fuel] || 10;
-            
-            travelRows.push({
-                id: uid(),
-                data: $('travel-date') ? $('travel-date').value || todayISO() : todayISO(),
-                turma: $('travel-class') ? $('travel-class').value.trim() : '',
-                destino: $('travel-destination') ? $('travel-destination').value.trim() : '',
-                veiculo: $('travel-vehicle') ? $('travel-vehicle').value : 'Senac',
-                combustivel: fuel,
-                km: $('travel-km') ? num($('travel-km').value) : 0,
-                consumo,
-                valorCombustivel: $('travel-fuel-price') ? num($('travel-fuel-price').value) : 6,
-                pedagio: $('travel-toll') ? num($('travel-toll').value) : 0,
-                outros: $('travel-other') ? num($('travel-other').value) : 0
-            });
-            renderAll();
-        }
-
-        function updateTravel(id, field, value) {
-            travelRows = travelRows.map(row => {
-                if (row.id !== id) return row;
-                const next = { ...row };
-                if (['km', 'consumo', 'valorCombustivel', 'pedagio', 'outros'].includes(field)) {
-                    next[field] = Math.max(0, num(value));
-                } else {
-                    next[field] = value;
-                }
-                if (field === 'combustivel' && (!next.consumo || next.consumo === row.consumo)) {
-                    next.consumo = FUEL_CONSUMPTION[value] || next.consumo;
-                }
-                return next;
-            });
-            renderAll();
-        }
-
-        function exportCsv(rows, filename, headers) {
-            const lines = [
-                headers.map(header => csvCell(header.label)).join(';'),
-                ...rows.map(row => headers.map(header => csvCell(header.value(row))).join(';'))
-            ];
-            const blob = new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function exportData() {
-            const rows = getEnrichedRows();
-            exportCsv(rows, 'orcamento-execucao-turmas.csv', [
-                { label: 'Turma', value: row => row.turma },
-                { label: 'Modalidade', value: row => row.modalidade },
-                { label: 'Alunos Ativos', value: row => row.alunos },
-                { label: 'Visitas Prev/Aluno', value: row => row.visitasTotal },
-                { label: 'Visitas Totais Previstas', value: row => row.totalVisitasPrevistas },
-                { label: 'Visitas Totais Realizadas (C/ Data)', value: row => row.visitasRealizadas },
-                { label: 'Horas Totais Previstas', value: row => row.horasTotaisPrevistas.toFixed(2).replace('.', ',') },
-                { label: 'Horas Ja Utilizadas', value: row => row.horasUtilizadas.toFixed(2).replace('.', ',') },
-                { label: 'Horas Restantes', value: row => row.horasRestantes.toFixed(2).replace('.', ',') },
-                { label: 'Orcamento Total Previsto', value: row => row.custoTotalPrevisto.toFixed(2).replace('.', ',') },
-                { label: 'Orcamento Utilizado', value: row => row.valorUtilizado.toFixed(2).replace('.', ',') },
-                { label: 'Saldo Teto (em horas)', value: row => row.saldoTeto.toFixed(2).replace('.', ',') },
-                { label: 'Status', value: row => row.estourou ? 'Estourada' : 'No limite' }
-            ]);
-        }
-
-        function exportTravel() {
-            const rows = travelRows.map(calcTravel);
-            exportCsv(rows, 'orcamento-deslocamentos.csv', [
-                { label: 'Data', value: row => row.data },
-                { label: 'Turma', value: row => row.turma },
-                { label: 'Destino', value: row => row.destino },
-                { label: 'Veiculo', value: row => row.veiculo },
-                { label: 'Combustivel', value: row => row.combustivel },
-                { label: 'KM', value: row => row.km.toFixed(1).replace('.', ',') },
-                { label: 'Consumo medio', value: row => row.consumo.toFixed(1).replace('.', ',') },
-                { label: 'Valor combustivel', value: row => row.valorCombustivel.toFixed(2).replace('.', ',') },
-                { label: 'Fator', value: row => row.fator.toFixed(2).replace('.', ',') },
-                { label: 'Litros base', value: row => row.litrosBase.toFixed(2).replace('.', ',') },
-                { label: 'Combustivel/reembolso', value: row => row.combustivel.toFixed(2).replace('.', ',') },
-                { label: 'Pedagio', value: row => row.pedagio.toFixed(2).replace('.', ',') },
-                { label: 'Outros', value: row => row.outros.toFixed(2).replace('.', ',') },
-                { label: 'Total', value: row => row.total.toFixed(2).replace('.', ',') }
-            ]);
-        }
-
-        function csvCell(value) {
-            let text = String(value ?? '');
-            if (/^[=+\-@]/.test(text)) text = `'${text}`;
-            return `"${text.replace(/"/g, '""')}"`;
-        }
-
-        function escapeHtml(value) {
-            return String(value ?? '').replace(/[&<>"']/g, char => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            }[char]));
-        }
-
-        function escapeAttr(value) {
-            return escapeHtml(value).replace(/`/g, '&#096;');
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === tab);
-            });
-            document.querySelectorAll('.tab-panel').forEach(panel => {
-                panel.classList.toggle('active', panel.id === `tab-${tab}`);
-            });
-        }
-
-        function bindEvents() {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-            });
-
-            addSafeEventListener('import-files', 'click', () => {
-                const fileInput = $('file-input');
-                if(fileInput) importFiles([...fileInput.files]);
-            });
-            
-            addSafeEventListener('reset-default', 'click', loadDefaultData);
-            
-            addSafeEventListener('apply-config', 'click', () => {
-                readConfigFromInputs();
-                renderAll();
-            });
-            
-            addSafeEventListener('filter-modality', 'change', renderDashboard);
-            addSafeEventListener('filter-risk', 'change', renderDashboard);
-            addSafeEventListener('filter-search', 'input', renderDashboard);
-
-            addSafeEventListener('add-row', 'click', addRow);
-            addSafeEventListener('export-data', 'click', exportData);
-            
-            addSafeEventListener('editable-table', 'change', event => {
-                const target = event.target;
-                const row = target.closest('tr[data-id]');
-                if (!row || !target.dataset.field) return;
-                updateRow(row.dataset.id, target.dataset.field, target.value);
-            });
-            
-            addSafeEventListener('editable-table', 'click', event => {
-                const button = event.target.closest('[data-action="delete-row"]');
-                if (!button) return;
-                const row = button.closest('tr[data-id]');
-                turmas = turmas.filter(item => item.id !== row.dataset.id);
-                renderAll();
-            });
-
-            addSafeEventListener('auto-turmas', 'click', suggestSimulationTurmas);
-            addSafeEventListener('run-simulation', 'click', runSimulation);
-            addSafeEventListener('apply-simulation', 'click', applySimulation);
-
-            addSafeEventListener('travel-fuel', 'change', event => {
-                const consumptionEl = $('travel-consumption');
-                if(consumptionEl) consumptionEl.value = FUEL_CONSUMPTION[event.target.value] || 10;
-            });
-            
-            addSafeEventListener('add-travel', 'click', addTravel);
-            addSafeEventListener('export-travel', 'click', exportTravel);
-            
-            addSafeEventListener('travel-table', 'change', event => {
-                const target = event.target;
-                const row = target.closest('tr[data-id]');
-                if (!row || !target.dataset.travelField) return;
-                updateTravel(row.dataset.id, target.dataset.travelField, target.value);
-            });
-            
-            addSafeEventListener('travel-table', 'click', event => {
-                const button = event.target.closest('[data-action="delete-travel"]');
-                if (!button) return;
-                const row = button.closest('tr[data-id]');
-                travelRows = travelRows.filter(item => item.id !== row.dataset.id);
-                renderAll();
-            });
-        }
-
+        // --- EVENTS ---
         document.addEventListener('DOMContentLoaded', () => {
-            const dateEl = $('travel-date');
-            if(dateEl) dateEl.value = todayISO();
+            setupDragAndDrop();
+            loadData();
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                $('tab-' + btn.dataset.tab).classList.add('active');
+            }));
+
+            $('apply-config')?.addEventListener('click', () => {
+                config.valorHora = num($('cfg-valor-hora').value);
+                config.horasPorVisita = num($('cfg-horas-visita').value);
+                config.tetoHoras = num($('cfg-teto').value);
+                saveData(); renderAll();
+            });
+
+            $('clear-data')?.addEventListener('click', clearData);
+            $('btn-print')?.addEventListener('click', () => {
+                $('print-date').innerText = `Emitido em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`;
+                window.print();
+            });
+
+            ['filter-modality', 'filter-risk'].forEach(id => $(id)?.addEventListener('change', renderDashboard));
+            $('filter-search')?.addEventListener('input', renderDashboard);
             
-            bindEvents();
+            $('add-row')?.addEventListener('click', () => {
+                turmas.push({id: uid(), turma: 'Nova Turma', modalidade: MODALIDADES.QUAL, alunos: 1, visitasTotal: 3, visitasRealizadas: 0});
+                saveData(); renderAll();
+            });
+
+            $('editable-table')?.addEventListener('change', e => {
+                const tr = e.target.closest('tr');
+                if(!tr || !e.target.dataset.field) return;
+                const idx = turmas.findIndex(t => t.id === tr.dataset.id);
+                if(idx > -1) {
+                    turmas[idx][e.target.dataset.field] = e.target.type==='number' ? num(e.target.value) : e.target.value;
+                    saveData(); renderAll();
+                }
+            });
+            $('editable-table')?.addEventListener('click', e => {
+                const btn = e.target.closest('button[data-action="delete"]');
+                if(btn) { turmas = turmas.filter(t => t.id !== btn.closest('tr').dataset.id); saveData(); renderAll(); }
+            });
             
-            // Inicia com a Previsão Anual de 870 + 500 = 1370
-            loadDefaultData(); 
-            suggestSimulationTurmas();
+            $('run-simulation')?.addEventListener('click', simularNovoCenario);
+            
+            $('add-travel')?.addEventListener('click', () => {
+                travelRows.push({
+                    id: uid(),
+                    data: $('travel-date')?.value || new Date().toISOString().split('T')[0],
+                    turma: $('travel-class')?.value || '',
+                    destino: $('travel-destination')?.value || '',
+                    veiculo: $('travel-vehicle')?.value || 'Senac',
+                    combustivel: 'Gasolina',
+                    km: num($('travel-km')?.value),
+                    consumo: 10,
+                    valorCombustivel: 6,
+                    pedagio: num($('travel-other')?.value),
+                    outros: 0
+                });
+                saveData(); renderAll();
+                alert("Lançado com sucesso!");
+            });
         });
     </script>
 </body>
