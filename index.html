@@ -98,7 +98,6 @@
         .kpi-label { font-size: 12px; text-transform: uppercase; color: #334155; font-weight: 900; }
         .kpi-desc { font-size: 11px; color: #64748b; line-height: 1.4; margin-top: 4px; font-weight: 500; }
         
-        /* Progress Bar for KPIs */
         .progress-bg { width: 100%; height: 4px; background: #e2e8f0; border-radius: 2px; margin-top: 12px; overflow: hidden; }
         .progress-bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
 
@@ -119,7 +118,6 @@
 
         .chart-box { height: 280px; position: relative; margin-top: 16px; }
         
-        /* Print Styles for Executive Report */
         @media print {
             body { background: #fff; color: #000; font-family: Arial, sans-serif; }
             .no-print, nav, .tab-btn, .drop-zone, button { display: none !important; }
@@ -143,13 +141,13 @@
                 </div>
                 <div class="min-w-0">
                     <h1 class="text-lg font-black tracking-wide truncate">Portal da Supervisão</h1>
-                    <p class="text-[11px] text-blue-100 font-semibold truncate uppercase tracking-wider">Gestão Orçamentária Executiva</p>
+                    <p class="text-[11px] text-blue-100 font-semibold truncate uppercase tracking-wider">Gestão Orçamentária em Nuvem</p>
                 </div>
             </div>
             <div class="hidden sm:flex items-center gap-4">
                 <div class="text-right">
                     <p class="text-sm font-bold">Senac Portão - PR</p>
-                    <p class="text-xs text-blue-100 flex items-center justify-end gap-1"><i class="fa-solid fa-circle text-[8px] text-green-400"></i> Sistema Online</p>
+                    <p class="text-xs text-blue-100 flex items-center justify-end gap-1" id="cloud-status"><i class="fa-solid fa-circle text-[8px] text-yellow-400"></i> Conectando...</p>
                 </div>
                 <button id="clear-data" class="btn btn-danger py-2 px-3 text-xs" title="Apaga todas as planilhas carregadas e recomeça a execução do zero">
                     <i class="fa-solid fa-trash-arrow-up"></i> Zerar Execução
@@ -159,17 +157,17 @@
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        <!-- Configuration & Upload Area (Hidden in Print) -->
+        <!-- Configuration & Upload Area -->
         <section class="grid grid-cols-1 xl:grid-cols-3 gap-5 no-print">
             <div class="panel p-6 xl:col-span-2">
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-cloud-arrow-up senac-blue-text"></i>
-                            Soma Contínua de Relatórios (Execução)
+                            Atualização Contínua de Relatórios
                         </h2>
                         <p class="text-sm text-slate-500 mt-1">
-                            Arraste os arquivos Excel das turmas aqui. Conforme você sobe planilhas de Qualificação e Técnica, o sistema <b>soma</b> tudo à execução geral.
+                            Arraste as planilhas aqui. O sistema mesclará os dados novos com os já salvos, <b>atualizando o volume de alunos</b> sem criar turmas duplicadas.
                         </p>
                     </div>
                 </div>
@@ -179,12 +177,12 @@
                     <p class="font-bold text-slate-700 text-lg">Arraste as planilhas para cá</p>
                     <p class="text-sm text-slate-500 mt-1 mb-4">ou clique para selecionar do seu computador</p>
                     <input id="file-input" type="file" accept=".xlsx,.xls,.csv" multiple class="hidden">
-                    <button class="btn btn-outline" onclick="document.getElementById('file-input').click()">
+                    <button id="btn-select-files" class="btn btn-outline">
                         Selecionar Arquivos
                     </button>
                 </div>
                 <div id="import-status" class="mt-3 text-sm font-semibold text-center text-slate-500">
-                    Nenhuma planilha de execução carregada nesta sessão.
+                    Aguardando envio de planilhas para atualizar a execução...
                 </div>
             </div>
 
@@ -209,8 +207,8 @@
                         <input id="cfg-teto" type="number" step="1" min="1" class="input font-bold" value="100">
                     </div>
                     <button id="apply-config" class="btn btn-orange w-full mt-2">
-                        <i class="fa-solid fa-calculator"></i>
-                        Recalcular Tudo
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        Salvar e Recalcular
                     </button>
                 </div>
             </div>
@@ -224,9 +222,6 @@
             <button class="tab-btn text-sm" data-tab="base">
                 <i class="fa-solid fa-table-list mr-2"></i>Ajuste Manual
             </button>
-            <button class="tab-btn text-sm" data-tab="simulator">
-                <i class="fa-solid fa-flask mr-2"></i>Simulador de Cenários
-            </button>
             <button class="tab-btn text-sm" data-tab="travel">
                 <i class="fa-solid fa-car mr-2"></i>Deslocamentos
             </button>
@@ -235,7 +230,6 @@
         <!-- DASHBOARD EXECUTIVO -->
         <section id="tab-dashboard" class="tab-panel active space-y-6">
             
-            <!-- Filters & Print Button -->
             <div class="flex flex-col md:flex-row gap-4 items-end justify-between no-print mb-2">
                 <div class="flex gap-3 flex-1 w-full md:w-auto">
                     <div class="w-1/3">
@@ -257,7 +251,6 @@
                 </button>
             </div>
 
-            <!-- Header Print Only -->
             <div class="hidden print:block mb-6 border-b-2 border-senac-blue pb-4">
                 <h1 class="text-2xl font-black text-senac-blue">Relatório Executivo de Execução Orçamentária</h1>
                 <p class="text-sm text-slate-600 mt-1" id="print-date"></p>
@@ -265,15 +258,12 @@
 
             <!-- BLOCO FIXO: BASE DE CONSULTA (PREVISÃO ANUAL) -->
             <div class="panel p-6 bg-gradient-to-r from-[#004587] to-[#002a52] text-white shadow-lg relative overflow-hidden">
-                <!-- Icon background element -->
                 <i class="fa-solid fa-bullseye absolute -right-6 -top-10 text-9xl text-white opacity-5"></i>
-                
                 <h2 class="text-xl font-black mb-5 flex items-center gap-3">
                     <i class="fa-solid fa-thumbtack text-orange-400"></i>
                     Base de Consulta Geral (Previsão Anual)
                     <span class="text-xs font-normal text-blue-200 bg-[#001d3a] px-3 py-1 rounded-full ml-2 border border-[#004587]">Metas Fixadas</span>
                 </h2>
-                
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
                     <div class="border-l-4 border-orange-400 pl-4">
                         <p class="text-blue-200 text-xs font-bold uppercase tracking-wider mb-1">Total de Alunos Base</p>
@@ -298,26 +288,23 @@
                 </div>
             </div>
 
-            <!-- BLOCO DINÂMICO: EXECUÇÃO REAL (LIDA PELAS PLANILHAS) -->
+            <!-- BLOCO DINÂMICO: EXECUÇÃO REAL -->
             <div class="flex items-center gap-3 mb-2 mt-8">
                 <i class="fa-solid fa-chart-line text-xl text-senac-blue"></i>
-                <h3 class="text-xl font-black text-slate-800">Uso Real e Saldo (Planilhas Lidas)</h3>
+                <h3 class="text-xl font-black text-slate-800">Uso Real e Saldo (Planilhas em Nuvem)</h3>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
                 <div class="panel p-5 kpi-card border-t-4 border-t-senac-blue">
                     <div>
-                        <div class="flex justify-between items-start">
-                            <p class="kpi-label mt-1 text-senac-blue">Alunos Executados</p>
-                        </div>
-                        <p class="kpi-desc">Alunos ativos encontrados nas planilhas importadas.</p>
+                        <p class="kpi-label mt-1 text-senac-blue">Alunos Executados</p>
+                        <p class="kpi-desc">Alunos ativos agregados pelas planilhas.</p>
                     </div>
                     <div>
                         <p id="kpi-alunos" class="kpi-value text-slate-800">0</p>
                         <div class="progress-bg"><div id="prog-alunos" class="progress-bar bg-senac-blue" style="width: 0%"></div></div>
                         <p class="text-xs text-slate-400 mt-2 font-bold flex justify-between">
-                            <span>Progresso vs Base:</span>
-                            <span id="kpi-alunos-pct">0%</span>
+                            <span>Progresso vs Base:</span><span id="kpi-alunos-pct">0%</span>
                         </p>
                     </div>
                 </div>
@@ -325,14 +312,13 @@
                 <div class="panel p-5 kpi-card border-t-4 border-t-emerald-500">
                     <div>
                         <p class="kpi-label mt-1 text-emerald-700">C.H. Consumida</p>
-                        <p class="kpi-desc">Horas consumidas com as datas de visitas já realizadas.</p>
+                        <p class="kpi-desc">Horas deduzidas das visitas já executadas.</p>
                     </div>
                     <div>
                         <p id="kpi-horas-total" class="kpi-value text-emerald-700">0h</p>
                         <div class="progress-bg"><div id="prog-horas" class="progress-bar bg-emerald-500" style="width: 0%"></div></div>
                         <p class="text-xs text-slate-400 mt-2 font-bold flex justify-between">
-                            <span>Uso da C.H. Projetada:</span>
-                            <span id="kpi-horas-pct">0%</span>
+                            <span>Uso da C.H. Projetada:</span><span id="kpi-horas-pct">0%</span>
                         </p>
                     </div>
                 </div>
@@ -340,14 +326,13 @@
                 <div class="panel p-5 kpi-card border-t-4 border-t-senac-orange">
                     <div>
                         <p class="kpi-label mt-1 text-senac-orange">Orçamento Consumido</p>
-                        <p class="kpi-desc">Valor em R$ gasto com as visitas executadas + deslocamentos.</p>
+                        <p class="kpi-desc">Valor gasto com visitas + deslocamentos.</p>
                     </div>
                     <div>
                         <p id="kpi-custo-total" class="kpi-value text-senac-orange">R$ 0,00</p>
                         <div class="progress-bg"><div id="prog-orcamento" class="progress-bar bg-senac-orange" style="width: 0%"></div></div>
                         <p class="text-xs text-slate-400 mt-2 font-bold flex justify-between">
-                            <span>Consumo da Verba Base:</span>
-                            <span id="kpi-orcamento-pct">0%</span>
+                            <span>Consumo da Verba:</span><span id="kpi-orcamento-pct">0%</span>
                         </p>
                     </div>
                 </div>
@@ -358,7 +343,7 @@
                             <p class="kpi-label mt-1 text-slate-700">Saldo Global Restante</p>
                             <i class="fa-solid fa-piggy-bank text-slate-300 text-2xl"></i>
                         </div>
-                        <p class="kpi-desc">Orçamento Projetado (Base) subtraindo tudo o que já foi gasto.</p>
+                        <p class="kpi-desc">Orçamento Projetado (Base) subtraindo os gastos.</p>
                     </div>
                     <div class="mt-4">
                         <p id="kpi-saldo-global" class="text-2xl font-black text-slate-800">R$ 10.518,75</p>
@@ -372,33 +357,26 @@
                 <div class="panel p-5 xl:col-span-2">
                     <div class="flex justify-between items-center mb-1">
                         <h2 class="text-base font-black flex items-center gap-2 text-slate-800">
-                            <i class="fa-solid fa-chart-column text-senac-blue"></i>
-                            Controle de Teto por Turma Lida (C.H.)
+                            <i class="fa-solid fa-chart-column text-senac-blue"></i>Controle de Teto por Turma (C.H.)
                         </h2>
                         <span id="kpi-estouradas" class="pill pill-gray text-xs">0 Turmas Acima do Teto</span>
                     </div>
-                    <p class="text-xs text-slate-500 mb-4">Garante visualmente que nenhuma turma ultrapasse 100h.</p>
-                    <div class="chart-box">
-                        <canvas id="chart-hours"></canvas>
-                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Acompanhe se alguma turma das planilhas está projetando mais de 100h.</p>
+                    <div class="chart-box"><canvas id="chart-hours"></canvas></div>
                 </div>
                 <div class="panel p-5">
                     <h2 class="text-base font-black mb-1 flex items-center gap-2 text-slate-800">
-                        <i class="fa-solid fa-chart-pie text-senac-orange"></i>
-                        Orçamento por Fatores
+                        <i class="fa-solid fa-chart-pie text-senac-orange"></i>Orçamento por Fatores
                     </h2>
-                    <p class="text-xs text-slate-500 mb-4">Fatia executada de cada componente da operação.</p>
-                    <div class="chart-box">
-                        <canvas id="chart-modality"></canvas>
-                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Divisão dos valores já gastos na execução.</p>
+                    <div class="chart-box"><canvas id="chart-modality"></canvas></div>
                 </div>
             </div>
 
             <!-- Table -->
             <div class="panel p-5">
                 <h2 class="text-base font-black mb-2 flex items-center gap-2 text-slate-800">
-                    <i class="fa-solid fa-table-list text-senac-blue"></i>
-                    Turmas em Execução (Agregadas pelas Planilhas)
+                    <i class="fa-solid fa-table-list text-senac-blue"></i>Turmas em Execução
                 </h2>
                 <div class="table-wrap custom-scrollbar max-h-[500px]">
                     <table>
@@ -406,11 +384,11 @@
                             <tr>
                                 <th>Turma</th>
                                 <th>Modalidade</th>
-                                <th class="text-right">Alunos Ativos</th>
-                                <th class="text-right" title="Quantidade de visitas com data / Total teto permitido">Visitas Feitas / Teto</th>
-                                <th class="text-right text-emerald-700 bg-emerald-50">C.H. Utilizada</th>
-                                <th class="text-right">C.H. Restante p/ Teto</th>
-                                <th class="text-right">Custo Gerado</th>
+                                <th class="text-right">Alunos Lidos</th>
+                                <th class="text-right">Visitas Feitas / Teto</th>
+                                <th class="text-right text-emerald-700 bg-emerald-50">C.H. Usada</th>
+                                <th class="text-right">C.H. Restante Permitida</th>
+                                <th class="text-right">Custo Executado</th>
                                 <th>Status Teto</th>
                             </tr>
                         </thead>
@@ -420,13 +398,13 @@
             </div>
         </section>
 
-        <!-- Other Sections (Omitted for Print) -->
+        <!-- Ajuste Manual -->
         <section id="tab-base" class="tab-panel space-y-5 no-print">
             <div class="panel p-5">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                     <div>
-                        <h2 class="text-lg font-black flex items-center gap-2"><i class="fa-solid fa-pen-to-square senac-blue-text"></i> Dados Extraídos (Ajuste Manual)</h2>
-                        <p class="text-sm text-slate-500 mt-1">Veja e ajuste as turmas somadas pelas planilhas, caso necessário forçar algum valor.</p>
+                        <h2 class="text-lg font-black flex items-center gap-2"><i class="fa-solid fa-pen-to-square senac-blue-text"></i> Dados em Nuvem (Edição Manual)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Qualquer alteração feita aqui é sincronizada automaticamente na nuvem.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button id="add-row" class="btn btn-outline"><i class="fa-solid fa-plus"></i> Inserir Extra</button>
@@ -441,11 +419,11 @@
                             <tr>
                                 <th>Turma</th>
                                 <th>Modalidade</th>
-                                <th class="text-right">Alunos Encontrados</th>
+                                <th class="text-right">Alunos Ativos</th>
                                 <th class="text-right">Teto Visitas</th>
                                 <th class="text-right text-emerald-700 bg-emerald-50">Visitas c/ Data</th>
-                                <th class="text-right">C.H. Prevista Limitada</th>
-                                <th class="text-right text-emerald-700 bg-emerald-50">Custo Financeiro Ativo</th>
+                                <th class="text-right">C.H. Projetada</th>
+                                <th class="text-right text-emerald-700 bg-emerald-50">Custo Atualizado</th>
                                 <th>Ação</th>
                             </tr>
                         </thead>
@@ -455,40 +433,22 @@
             </div>
         </section>
 
-        <section id="tab-simulator" class="tab-panel space-y-5 no-print">
-            <div class="panel p-5">
-                <h2 class="text-lg font-black flex items-center gap-2"><i class="fa-solid fa-flask senac-blue-text"></i> Simulador de Cenários Novos</h2>
-                <p class="text-sm text-slate-500 mt-1 mb-4">Caso queira prever o impacto orçamentário se o volume de alunos subir no futuro.</p>
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
-                    <div><label class="field-label">Alunos Qual.</label><input id="sim-qual-alunos" type="number" class="input" value="870"></div>
-                    <div><label class="field-label">Alunos Téc.</label><input id="sim-tec-alunos" type="number" class="input" value="500"></div>
-                    <div><label class="field-label">Turmas Qual.</label><input id="sim-qual-turmas" type="number" class="input" value="14"></div>
-                    <div><label class="field-label">Turmas Téc.</label><input id="sim-tec-turmas" type="number" class="input" value="16"></div>
-                    <button id="run-simulation" class="btn btn-primary w-full"><i class="fa-solid fa-play"></i> Prever Custos</button>
-                </div>
-                <div class="mt-6 p-4 border-2 border-dashed border-orange-200 bg-orange-50 rounded-lg text-center">
-                    <p class="text-sm text-orange-800 font-bold mb-2">Simulação Rápida (Não afeta a Base Principal).</p>
-                    <p class="text-xl font-black text-senac-orange" id="sim-result-orcamento">R$ 0,00</p>
-                    <p class="text-xs text-orange-700" id="sim-result-ch">0 Horas Projetadas</p>
-                </div>
-            </div>
-        </section>
-
+        <!-- Deslocamento -->
         <section id="tab-travel" class="tab-panel space-y-5 no-print">
             <div class="panel p-5">
-                <h2 class="text-lg font-black flex items-center gap-2 mb-4"><i class="fa-solid fa-route senac-blue-text"></i> Lançamento de Deslocamento Adicional</h2>
+                <h2 class="text-lg font-black flex items-center gap-2 mb-4"><i class="fa-solid fa-route senac-blue-text"></i> Lançamento de Deslocamento</h2>
                 <div class="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
                     <div><label class="field-label">Turma</label><input id="travel-class" class="input" list="turmas-list"></div>
                     <div><label class="field-label">Destino</label><input id="travel-destination" class="input"></div>
                     <div><label class="field-label">Veículo</label><select id="travel-vehicle" class="input"><option>Senac</option><option>Próprio</option></select></div>
                     <div><label class="field-label">KM (Ida+Volta)</label><input id="travel-km" type="number" class="input" value="0"></div>
                     <div><label class="field-label">Pedágio/Outros</label><input id="travel-other" type="number" class="input" value="0"></div>
-                    <button id="add-travel" class="btn btn-primary w-full"><i class="fa-solid fa-plus"></i> Lançar</button>
+                    <button id="add-travel" class="btn btn-primary w-full"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar</button>
                 </div>
                 <datalist id="turmas-list"></datalist>
             </div>
             <div class="panel p-5">
-                <div class="flex justify-between mb-3"><h2 class="font-black text-lg">Histórico (Soma ao orçamento gasto)</h2><button id="export-travel" class="btn btn-outline py-1 px-3 text-xs"><i class="fa-solid fa-download"></i> CSV</button></div>
+                <div class="flex justify-between mb-3"><h2 class="font-black text-lg">Histórico de Gastos</h2><button id="export-travel" class="btn btn-outline py-1 px-3 text-xs"><i class="fa-solid fa-download"></i> CSV</button></div>
                 <div class="table-wrap max-h-[400px]">
                     <table>
                         <thead><tr><th>Turma</th><th>Destino</th><th>Veículo</th><th class="text-right">KM</th><th class="text-right">Extra</th><th class="text-right">Total (R$)</th><th>Ação</th></tr></thead>
@@ -499,17 +459,29 @@
         </section>
     </main>
 
-    <script>
+    <!-- FIREBASE CLOUD SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, setDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration & Initialization
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        let userId = null;
+
         const MODALIDADES = { QUAL: 'Qualificação', TEC: 'Técnica' };
         const DEFAULT_VISITS = { [MODALIDADES.QUAL]: 3, [MODALIDADES.TEC]: 6 };
         
-        // BASE DE CONSULTA GERAL
         const ALUNOS_BASE_QUAL = 870;
         const ALUNOS_BASE_TEC = 500;
         const ALUNOS_META = ALUNOS_BASE_QUAL + ALUNOS_BASE_TEC;
 
         let config = { valorHora: 3.75, horasPorVisita: 0.5, tetoHoras: 100 };
-        let turmas = []; // Matriz da Execução (soma das planilhas)
+        let turmas = []; // Execução em nuvem
         let travelRows = [];
         let chartHours = null;
         let chartModality = null;
@@ -521,61 +493,113 @@
         const uid = () => Math.random().toString(36).slice(2, 10);
         const norm = v => String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
-        // --- LOCAL STORAGE (Persistence) ---
-        function saveData() {
-            localStorage.setItem('senac_execucao', JSON.stringify(turmas));
-            localStorage.setItem('senac_travel', JSON.stringify(travelRows));
-            localStorage.setItem('senac_config', JSON.stringify(config));
-        }
-
-        function loadData() {
-            const savedConfig = localStorage.getItem('senac_config');
-            if (savedConfig) config = JSON.parse(savedConfig);
-            
-            if(config) {
-                if($('cfg-valor-hora')) $('cfg-valor-hora').value = config.valorHora;
-                if($('cfg-horas-visita')) $('cfg-horas-visita').value = config.horasPorVisita;
-                if($('cfg-teto')) $('cfg-teto').value = config.tetoHoras;
-            }
-
-            const savedTurmas = localStorage.getItem('senac_execucao');
-            const savedTravel = localStorage.getItem('senac_travel');
-            
-            turmas = (savedTurmas && savedTurmas !== '[]') ? JSON.parse(savedTurmas) : [];
-            travelRows = savedTravel ? JSON.parse(savedTravel) : [];
-            
-            if(turmas.length > 0) {
-                setStatus('Execução recuperada da última sessão.', 'info');
-            }
-            renderAll();
-        }
-
-        function clearData() {
-            if(confirm("Tem certeza que deseja apagar a execução de todas as turmas importadas? A Base Fixa de Consulta continuará a mesma.")) {
-                localStorage.removeItem('senac_execucao');
-                localStorage.removeItem('senac_travel');
-                turmas = [];
-                travelRows = [];
-                setStatus('Aguardando envio de planilhas para iniciar a soma da execução...', 'info');
-                renderAll();
-            }
-        }
-
+        // Helpers Visuais
         function setStatus(msg, type='info') {
             const el = $('import-status');
             if(el) el.innerHTML = `<span class="${type==='error'?'text-red-600':type==='ok'?'text-emerald-600':'text-senac-blue'}">${msg}</span>`;
         }
 
-        // --- BASE DE CONSULTA FIXA ---
-        function getPrevisaoBase() {
-            const visitasQual = ALUNOS_BASE_QUAL * DEFAULT_VISITS[MODALIDADES.QUAL];
-            const visitasTec = ALUNOS_BASE_TEC * DEFAULT_VISITS[MODALIDADES.TEC];
-            const visitasTotal = visitasQual + visitasTec;
-            
-            const chTotal = visitasTotal * config.horasPorVisita;
-            const orcamentoTotal = chTotal * config.valorHora;
+        function setCloudStatus(connected) {
+            const el = $('cloud-status');
+            if(el) el.innerHTML = connected 
+                ? '<i class="fa-solid fa-circle text-[8px] text-green-400"></i> Nuvem Sincronizada'
+                : '<i class="fa-solid fa-circle text-[8px] text-yellow-400"></i> Conectando...';
+        }
 
-            return { visitas: visitasTotal, chTotal, orcamentoTotal };
+        // ---------------- AUTH E NUVEM ----------------
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Erro na autenticação:", error);
+            }
+        }
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                userId = user.uid;
+                setCloudStatus(true);
+                loadDataFromCloud();
+            }
+        });
+
+        // Referências Firestore
+        const getTurmasRef = () => collection(db, 'artifacts', appId, 'users', userId, 'turmas');
+        const getTravelRef = () => collection(db, 'artifacts', appId, 'users', userId, 'travel');
+        const getConfigDoc = () => doc(db, 'artifacts', appId, 'users', userId, 'config', 'main');
+
+        async function loadDataFromCloud() {
+            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Carregando execução salva na nuvem...', 'info');
+            try {
+                // Carrega Config
+                const configSnap = await getDocs(collection(db, 'artifacts', appId, 'users', userId, 'config'));
+                if (!configSnap.empty) {
+                    config = { ...config, ...configSnap.docs[0].data() };
+                    if($('cfg-valor-hora')) $('cfg-valor-hora').value = config.valorHora;
+                    if($('cfg-horas-visita')) $('cfg-horas-visita').value = config.horasPorVisita;
+                    if($('cfg-teto')) $('cfg-teto').value = config.tetoHoras;
+                }
+
+                // Carrega Turmas
+                const tSnap = await getDocs(getTurmasRef());
+                turmas = tSnap.docs.map(d => d.data());
+
+                // Carrega Deslocamentos
+                const trSnap = await getDocs(getTravelRef());
+                travelRows = trSnap.docs.map(d => d.data());
+
+                setStatus('<i class="fa-solid fa-cloud-check"></i> Pronto para novos envios.', 'ok');
+                renderAll();
+            } catch (error) {
+                console.error("Erro ao puxar dados:", error);
+                setStatus('Aviso: Falha ao carregar nuvem.', 'error');
+            }
+        }
+
+        async function saveConfigToCloud() {
+            if(!userId) return;
+            try { await setDoc(getConfigDoc(), config); } catch(e) { console.error(e); }
+        }
+
+        async function saveTurmaToCloud(turmaObj) {
+            if(!userId) return;
+            try { await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', turmaObj.id), turmaObj); } catch(e) { console.error(e); }
+        }
+
+        async function deleteTurmaFromCloud(id) {
+            if(!userId) return;
+            try { await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', id)); } catch(e) { console.error(e); }
+        }
+
+        async function saveTravelToCloud(travelObj) {
+            if(!userId) return;
+            try { await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', travelObj.id), travelObj); } catch(e) { console.error(e); }
+        }
+
+        async function clearAllCloudData() {
+            if(confirm("ATENÇÃO: Deseja zerar toda a sua execução? Isso apagará as turmas em nuvem. A Meta Base não será afetada.")) {
+                setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Apagando dados na nuvem...', 'info');
+                const promises = [];
+                turmas.forEach(t => promises.push(deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'turmas', t.id))));
+                travelRows.forEach(t => promises.push(deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', t.id))));
+                
+                await Promise.all(promises);
+                turmas = [];
+                travelRows = [];
+                setStatus('<i class="fa-solid fa-trash-check"></i> Execução completamente zerada.', 'ok');
+                renderAll();
+            }
+        }
+
+        // ---------------- CALCULADORA E RENDER ----------------
+        function getPrevisaoBase() {
+            const vTotal = (ALUNOS_BASE_QUAL * DEFAULT_VISITS[MODALIDADES.QUAL]) + (ALUNOS_BASE_TEC * DEFAULT_VISITS[MODALIDADES.TEC]);
+            const chTotal = vTotal * config.horasPorVisita;
+            return { visitas: vTotal, chTotal, orcamentoTotal: chTotal * config.valorHora };
         }
 
         function renderPrevisaoGeral() {
@@ -586,12 +610,10 @@
             return base;
         }
 
-        // --- LÓGICA CORE (EXECUÇÃO) ---
         function enrichRow(row) {
             const a = Math.max(0, num(row.alunos)), vt = Math.max(0, num(row.visitasTotal)), vr = Math.max(0, num(row.visitasRealizadas));
-            const hpv = config.horasPorVisita, vh = config.valorHora;
-            const tp = a * vt, hp = tp * hpv, cp = hp * vh;
-            const hu = vr * hpv, vu = hu * vh;
+            const tp = a * vt, hp = tp * config.horasPorVisita, cp = hp * config.valorHora;
+            const hu = vr * config.horasPorVisita, vu = hu * config.valorHora;
             const hr = hp - hu, cr = cp - vu, st = config.tetoHoras - hp;
             return { ...row, alunos: a, visitasTotal: vt, visitasRealizadas: vr, totalVisitasPrevistas: tp, horasTotaisPrevistas: hp, custoTotalPrevisto: cp, horasUtilizadas: hu, valorUtilizado: vu, horasRestantes: hr, custoRestante: cr, saldoTeto: st, estourou: st < 0 };
         }
@@ -604,18 +626,13 @@
                 acc.hp += r.horasTotaisPrevistas; acc.hu += r.horasUtilizadas; acc.hr += Math.max(0, r.horasRestantes);
                 acc.cp += r.custoTotalPrevisto; acc.vu += r.valorUtilizado; acc.cr += Math.max(0, r.custoRestante);
                 acc.est += r.estourou ? 1 : 0;
-                
-                if(r.modalidade === MODALIDADES.QUAL) acc.custoQual += r.valorUtilizado;
-                else acc.custoTec += r.valorUtilizado;
-
+                if(r.modalidade === MODALIDADES.QUAL) acc.custoQual += r.valorUtilizado; else acc.custoTec += r.valorUtilizado;
                 return acc;
             }, {a:0, tp:0, vr:0, hp:0, hu:0, hr:0, cp:0, vu:0, cr:0, est:0, custoQual:0, custoTec:0});
         }
 
-        // --- RENDER DASHBOARD ---
         function renderDashboard() {
-            const base = renderPrevisaoGeral(); // Update fixed panel variables
-
+            const base = renderPrevisaoGeral(); 
             const fMod = $('filter-modality')?.value || 'all', fSrc = norm($('filter-search')?.value || ''), fRsk = $('filter-risk')?.value || 'all';
             const rows = getEnrichedRows().filter(r => (fMod==='all'||r.modalidade===fMod) && (!fSrc||norm(r.turma).includes(fSrc)) && (fRsk==='all'||(fRsk==='over'&&r.estourou)||(fRsk==='ok'&&!r.estourou))).sort((a,b) => b.horasTotaisPrevistas - a.horasTotaisPrevistas);
             
@@ -646,10 +663,8 @@
                 $('kpi-saldo-global').textContent = brl(saldo);
                 $('kpi-saldo-global').className = saldo >= 0 ? "text-2xl font-black text-slate-800" : "text-2xl font-black text-red-600";
             }
-            
             if($('kpi-estouradas')) $('kpi-estouradas').innerHTML = `<span class="${t.est > 0 ? 'text-red-600 font-bold' : 'text-slate-600'}">${t.est} Turmas Acima do Teto</span>`;
 
-            // Table
             const tbody = $('dashboard-table');
             if(tbody) {
                 tbody.innerHTML = rows.length ? rows.map(r => `
@@ -666,7 +681,6 @@
                 `).join('') : '<tr><td colspan="8" class="text-center text-slate-500 py-6">Nenhuma turma adicionada à execução ainda. Importe arquivos.</td></tr>';
             }
 
-            // Charts
             const topRows = rows.slice(0, 25);
             if(chartHours) chartHours.destroy();
             if($('chart-hours') && topRows.length > 0) {
@@ -677,7 +691,7 @@
                         datasets: [
                             { type: 'line', label: 'Teto (100h)', data: topRows.map(() => config.tetoHoras), borderColor: '#ef4444', borderWidth: 2, borderDash: [5,5], pointRadius: 0 },
                             { label: 'C.H. Restante Permitida', data: topRows.map(r => Math.max(0, r.horasRestantes)), backgroundColor: topRows.map(r => r.estourou ? '#fca5a5' : '#e2e8f0') },
-                            { label: 'C.H. Já Lançada (Visitas)', data: topRows.map(r => r.horasUtilizadas), backgroundColor: '#059669', borderRadius: 4 }
+                            { label: 'C.H. Lançada', data: topRows.map(r => r.horasUtilizadas), backgroundColor: '#059669', borderRadius: 4 }
                         ]
                     },
                     options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { position: 'top' } } }
@@ -689,19 +703,15 @@
                 chartModality = new Chart($('chart-modality').getContext('2d'), {
                     type: 'doughnut',
                     data: {
-                        labels: ['Qualificação (Executado)', 'Técnica (Executado)', 'Deslocamentos (Gastos)'],
-                        datasets: [{
-                            data: [t.custoQual, t.custoTec, trvTotal],
-                            backgroundColor: ['#004587', '#f37021', '#94a3b8'],
-                            borderWidth: 0
-                        }]
+                        labels: ['Qualificação (Exec)', 'Técnica (Exec)', 'Deslocamentos'],
+                        datasets: [{ data: [t.custoQual, t.custoTec, trvTotal], backgroundColor: ['#004587', '#f37021', '#94a3b8'], borderWidth: 0 }]
                     },
                     options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom' } } }
                 });
             }
         }
 
-        // --- EXCEL IMPORT LOGIC (CONTINUOUS ADD/MERGE) ---
+        // ---------------- MESCLAGEM EM NUVEM E EXCEL ----------------
         function findCol(row, aliases) {
             const keys = Object.keys(row), norms = keys.map(k => ({k, n: norm(k)}));
             for(let a of aliases) { let ex = norms.find(i=>i.n===norm(a)); if(ex) return ex.k; }
@@ -710,11 +720,11 @@
         }
 
         async function processFiles(files) {
-            if(!files.length) return;
-            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Processando arquivos e mesclando com a base existente...', 'info');
+            if(!files.length || !userId) return;
+            setStatus('<i class="fa-solid fa-spinner fa-spin"></i> Processando arquivos e salvando na nuvem...', 'info');
             
             const uploadBatchMap = new Map();
-            let totalLidos = 0, totalIgnorados = 0;
+            let totalLidos = 0;
 
             for(let file of files) {
                 const buffer = await file.arrayBuffer();
@@ -723,20 +733,16 @@
                     XLSX.utils.sheet_to_json(wb.Sheets[sn], {defval:''}).forEach(row => {
                         const isDesligado = norm(row[findCol(row, ['desligado', 'encerrado'])]||'') === 'sim';
                         const status = norm(row[findCol(row, ['status', 'situacao'])]||'');
-                        const isCancelado = status.includes('cancel')||status.includes('desist')||status.includes('inativ');
+                        if(isDesligado || status.includes('cancel')||status.includes('desist')||status.includes('inativ')) return;
                         
-                        if(isDesligado || isCancelado) { totalIgnorados++; return; }
                         totalLidos++;
-
                         const turma = String(row[findCol(row, ['turma'])]||'').trim() || 'Desconhecida';
                         const isTec = Object.keys(row).some(k => norm(k).includes('4 visita')||norm(k).includes('5 visita')||norm(k).includes('6 visita'));
                         const mod = isTec ? MODALIDADES.TEC : MODALIDADES.QUAL;
-                        
                         const visits = Object.keys(row).filter(k => /^\d+ª?\s*visita/i.test(k)).filter(k => String(row[k]).trim()).length;
-
                         const key = `${mod}::${turma}`;
-                        if(!uploadBatchMap.has(key)) uploadBatchMap.set(key, {id:uid(), turma, modalidade: mod, alunos: 0, visitasTotal: DEFAULT_VISITS[mod], visitasRealizadas: 0});
                         
+                        if(!uploadBatchMap.has(key)) uploadBatchMap.set(key, {id: uid(), turma, modalidade: mod, alunos: 0, visitasTotal: DEFAULT_VISITS[mod], visitasRealizadas: 0});
                         const g = uploadBatchMap.get(key);
                         g.alunos += 1;
                         g.visitasRealizadas += visits;
@@ -745,44 +751,29 @@
             }
 
             if(uploadBatchMap.size > 0) {
-                // Lógica de Soma/Atualização:
-                // Pegamos o que já existe em 'turmas' e atualizamos com a nova leitura do Batch atual.
                 const existingMap = new Map(turmas.map(t => [`${t.modalidade}::${t.turma}`, t]));
-                
+                const cloudPromises = [];
+
                 uploadBatchMap.forEach((batchRow, key) => {
-                    // Se for um update de uma turma, substitui (assumindo que a planilha nova tem os dados atualizados reais)
-                    // Se for nova, apenas adiciona.
+                    // Verifica se a turma já existe na base executada. Se sim, preserva o ID para atualizar o DOC no banco
+                    if (existingMap.has(key)) {
+                        batchRow.id = existingMap.get(key).id;
+                    }
                     existingMap.set(key, batchRow);
+                    cloudPromises.push(saveTurmaToCloud(batchRow));
                 });
 
+                await Promise.all(cloudPromises);
                 turmas = [...existingMap.values()];
-                saveData();
-                setStatus(`Sucesso! <b>${totalLidos} novos alunos</b> lidos das planilhas e adicionados/mesclados à Execução.`, 'ok');
+                
+                setStatus(`<i class="fa-solid fa-cloud-arrow-up"></i> Sucesso! <b>${totalLidos} alunos</b> consolidados nas planilhas e salvos na Nuvem.`, 'ok');
                 renderAll();
             } else {
-                setStatus('Erro: Nenhum aluno ativo válido encontrado nas planilhas submetidas.', 'error');
+                setStatus('Erro: Nenhum aluno ativo encontrado nas planilhas submetidas.', 'error');
             }
         }
 
-        // --- DRAG AND DROP SETUP ---
-        function setupDragAndDrop() {
-            const dropZone = $('drop-zone');
-            if(!dropZone) return;
-            
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                dropZone.addEventListener(eventName, preventDefaults, false);
-                document.body.addEventListener(eventName, preventDefaults, false);
-            });
-
-            function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
-            
-            ['dragenter', 'dragover'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false));
-            ['dragleave', 'drop'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false));
-            
-            dropZone.addEventListener('drop', e => processFiles(e.dataTransfer.files), false);
-            $('file-input')?.addEventListener('change', e => processFiles(e.target.files));
-        }
-
+        // ---------------- TABELAS E RENDER ----------------
         function renderEditableTable() {
             const tbody = $('editable-table');
             if(tbody) tbody.innerHTML = turmas.map(r => `<tr data-id="${r.id}">
@@ -797,26 +788,42 @@
             </tr>`).join('');
             if($('turmas-list')) $('turmas-list').innerHTML = [...new Set(turmas.map(r=>r.turma))].map(t=>`<option value="${t}">`).join('');
         }
-        
-        function simularNovoCenario() {
-            const aQ = num($('sim-qual-alunos').value), aT = num($('sim-tec-alunos').value);
-            const tQ = num($('sim-qual-turmas').value), tT = num($('sim-tec-turmas').value);
-            
-            const vQ = aQ * 3, vT = aT * 6;
-            const chT = (vQ + vT) * config.horasPorVisita;
-            const orcT = chT * config.valorHora;
-            
-            $('sim-result-orcamento').textContent = brl(orcT);
-            $('sim-result-ch').textContent = `${fmt(chT)} Horas Globais (em ${tQ+tT} turmas)`;
+
+        function renderTravel() {
+            const tbody = $('travel-table');
+            if(tbody) tbody.innerHTML = travelRows.map(r => {
+                const combCost = (num(r.km)/10 * (r.veiculo==='Próprio'?1.25:1) * num(r.valorCombustivel||6));
+                const total = combCost + num(r.pedagio) + num(r.outros);
+                return `<tr data-id="${r.id}">
+                    <td>${r.turma}</td><td>${r.destino}</td><td>${r.veiculo}</td>
+                    <td class="text-right">${r.km}</td><td class="text-right">${brl(num(r.pedagio)+num(r.outros))}</td>
+                    <td class="text-right font-bold text-senac-orange">${brl(total)}</td>
+                    <td><button class="btn btn-danger py-1 px-2" data-action="delete"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+            }).join('');
         }
 
-        function renderAll() { renderDashboard(); renderEditableTable(); }
+        function renderAll() { renderDashboard(); renderEditableTable(); renderTravel(); }
 
-        // --- EVENTS ---
+        // ---------------- LISTENERS DE EVENTOS ----------------
         document.addEventListener('DOMContentLoaded', () => {
-            setupDragAndDrop();
-            loadData();
+            initAuth();
 
+            // Drag and drop setup
+            const dropZone = $('drop-zone');
+            if(dropZone) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
+                    dropZone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }, false);
+                    document.body.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }, false);
+                });
+                ['dragenter', 'dragover'].forEach(evt => dropZone.addEventListener(evt, () => dropZone.classList.add('dragover'), false));
+                ['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, () => dropZone.classList.remove('dragover'), false));
+                dropZone.addEventListener('drop', e => processFiles(e.dataTransfer.files), false);
+            }
+            $('btn-select-files')?.addEventListener('click', () => $('file-input').click());
+            $('file-input')?.addEventListener('change', e => processFiles(e.target.files));
+
+            // Tabs UI
             document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -828,10 +835,10 @@
                 config.valorHora = num($('cfg-valor-hora').value);
                 config.horasPorVisita = num($('cfg-horas-visita').value);
                 config.tetoHoras = num($('cfg-teto').value);
-                saveData(); renderAll();
+                saveConfigToCloud(); renderAll();
             });
 
-            $('clear-data')?.addEventListener('click', clearData);
+            $('clear-data')?.addEventListener('click', clearAllCloudData);
             $('btn-print')?.addEventListener('click', () => {
                 $('print-date').innerText = `Emitido em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`;
                 window.print();
@@ -840,9 +847,12 @@
             ['filter-modality', 'filter-risk'].forEach(id => $(id)?.addEventListener('change', renderDashboard));
             $('filter-search')?.addEventListener('input', renderDashboard);
             
+            // Tabela Editável (Mutations)
             $('add-row')?.addEventListener('click', () => {
-                turmas.push({id: uid(), turma: 'Nova Turma', modalidade: MODALIDADES.QUAL, alunos: 1, visitasTotal: 3, visitasRealizadas: 0});
-                saveData(); renderAll();
+                const nova = {id: uid(), turma: 'Nova Turma', modalidade: MODALIDADES.QUAL, alunos: 1, visitasTotal: 3, visitasRealizadas: 0};
+                turmas.push(nova);
+                saveTurmaToCloud(nova); 
+                renderAll();
             });
 
             $('editable-table')?.addEventListener('change', e => {
@@ -851,32 +861,49 @@
                 const idx = turmas.findIndex(t => t.id === tr.dataset.id);
                 if(idx > -1) {
                     turmas[idx][e.target.dataset.field] = e.target.type==='number' ? num(e.target.value) : e.target.value;
-                    saveData(); renderAll();
+                    saveTurmaToCloud(turmas[idx]); 
+                    renderAll();
                 }
             });
+
             $('editable-table')?.addEventListener('click', e => {
                 const btn = e.target.closest('button[data-action="delete"]');
-                if(btn) { turmas = turmas.filter(t => t.id !== btn.closest('tr').dataset.id); saveData(); renderAll(); }
+                if(btn) { 
+                    const idDel = btn.closest('tr').dataset.id;
+                    turmas = turmas.filter(t => t.id !== idDel); 
+                    deleteTurmaFromCloud(idDel);
+                    renderAll(); 
+                }
             });
-            
-            $('run-simulation')?.addEventListener('click', simularNovoCenario);
-            
+
+            // Viagens Cloud (Mutations)
             $('add-travel')?.addEventListener('click', () => {
-                travelRows.push({
+                const novaV = {
                     id: uid(),
-                    data: $('travel-date')?.value || new Date().toISOString().split('T')[0],
+                    data: new Date().toISOString().split('T')[0],
                     turma: $('travel-class')?.value || '',
                     destino: $('travel-destination')?.value || '',
                     veiculo: $('travel-vehicle')?.value || 'Senac',
                     combustivel: 'Gasolina',
                     km: num($('travel-km')?.value),
-                    consumo: 10,
                     valorCombustivel: 6,
                     pedagio: num($('travel-other')?.value),
                     outros: 0
-                });
-                saveData(); renderAll();
-                alert("Lançado com sucesso!");
+                };
+                travelRows.push(novaV);
+                saveTravelToCloud(novaV);
+                renderAll();
+                alert("Lançado e salvo na nuvem com sucesso!");
+            });
+
+            $('travel-table')?.addEventListener('click', e => {
+                const btn = e.target.closest('button[data-action="delete"]');
+                if(btn) { 
+                    const idDel = btn.closest('tr').dataset.id;
+                    travelRows = travelRows.filter(t => t.id !== idDel); 
+                    deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'travel', idDel));
+                    renderAll(); 
+                }
             });
         });
     </script>
