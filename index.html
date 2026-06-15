@@ -751,9 +751,14 @@
                         
                         totalLidos++;
                         const turma = String(row[findCol(row, ['turma'])]||'').trim() || 'Desconhecida';
-                        const isTec = Object.keys(row).some(k => norm(k).includes('4 visita')||norm(k).includes('5 visita')||norm(k).includes('6 visita'));
+                        
+                        // Nova lógica inteligente para detectar colunas de Técnica (4ª, 5ª ou 6ª visita) independente de como foi digitado
+                        const isTec = Object.keys(row).some(k => /^(4|5|6)[ªaA°oO]?\s*visita/i.test(k));
                         const mod = isTec ? MODALIDADES.TEC : MODALIDADES.QUAL;
-                        const visits = Object.keys(row).filter(k => /^\d+ª?\s*visita/i.test(k)).filter(k => String(row[k]).trim()).length;
+                        
+                        // Garante que a contagem de visitas feitas acompanhe a mesma flexibilidade
+                        const visits = Object.keys(row).filter(k => /^\d+[ªaA°oO]?\s*visita/i.test(k)).filter(k => String(row[k]).trim()).length;
+                        
                         const key = `${mod}::${turma}`;
                         
                         if(!uploadBatchMap.has(key)) uploadBatchMap.set(key, {id: uid(), turma, modalidade: mod, alunos: 0, visitasTotal: DEFAULT_VISITS[mod], visitasRealizadas: 0});
